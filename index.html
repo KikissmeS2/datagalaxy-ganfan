@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DataGalaxy干饭任意门</title>
+<style>
+  :root{
+    --bg:#f7f4ef; --fg:#22201c; --card:#ffffff; --card2:#f1ece4;
+    --muted:#8a8175; --line:#e7e0d6; --accent:#1e8fe8; --accent2:#1267c2;
+    --accent-soft:#e3f1fc; --gold:#d9a428; --gold-soft:#f7efd8;
+    --green:#3f7d5a; --green-soft:#e3efe7; --blue:#31638f; --blue-soft:#e2ecf5;
+    --shadow:0 2px 6px rgba(70,50,30,.08), 0 12px 30px rgba(70,50,30,.07);
+    --radius:16px;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#171512; --fg:#ece7de; --card:#221f1a; --card2:#2b2721;
+      --muted:#a3988a; --line:#3a342c; --accent:#5bb3f7; --accent2:#8ac7fa;
+      --accent-soft:#16324a; --gold:#e2b64f; --gold-soft:#3c3218;
+      --green:#79b392; --green-soft:#1f3327; --blue:#7ba8cf; --blue-soft:#1e2f40;
+      --shadow:0 2px 6px rgba(0,0,0,.35), 0 12px 30px rgba(0,0,0,.3);
+    }
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang TC","PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans TC",sans-serif;
+    background:var(--bg); color:var(--fg); line-height:1.55; -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1180px; margin:0 auto; padding:0 18px;}
+
+  header.site{
+    position:sticky; top:0; z-index:50;
+    background:var(--bg);
+    background:color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .head-inner{display:flex; align-items:center; gap:14px; padding:14px 18px; max-width:1180px; margin:0 auto; flex-wrap:wrap;}
+  .brand{display:flex; align-items:center; gap:12px; min-width:0;}
+  .brand .logo{
+    width:48px; height:48px; border-radius:50%; flex:0 0 auto; background:#fff;
+    overflow:hidden; border:2px solid #fff;
+    box-shadow:0 3px 10px rgba(30,143,232,.35);
+  }
+  .brand .logo img{
+    width:100%; height:100%; object-fit:cover; display:block;
+  }
+  .brand h1{font-size:19px; font-weight:700; letter-spacing:.2px; line-height:1.25;}
+  .brand p{font-size:12.5px; color:var(--muted); margin-top:1px;}
+  .head-meta{margin-left:auto; display:flex; align-items:center; gap:8px; color:var(--muted); font-size:12.5px; flex-wrap:wrap;}
+  .updated{border:1px solid var(--line); padding:4px 10px; border-radius:999px; background:var(--card); white-space:nowrap;}
+
+  .toolbar{position:relative; background:var(--bg); padding:12px 0 10px; border-bottom:1px solid var(--line);}
+  .toolbar .row1{display:flex; gap:10px; align-items:center; flex-wrap:wrap;}
+  .tabs{display:flex; gap:6px; flex-wrap:wrap;}
+  .tab{
+    appearance:none; border:1px solid var(--line); background:var(--card); color:var(--fg);
+    padding:8px 14px; border-radius:999px; font-size:14px; cursor:pointer; font-weight:500;
+    display:inline-flex; align-items:center; gap:6px; transition:all .15s;
+  }
+  .tab .n{color:var(--muted); font-size:12px; font-weight:400;}
+  .tab:hover{border-color:var(--accent);}
+  .tab.active{background:var(--accent); border-color:var(--accent); color:#fff;}
+  .tab.active .n{color:rgba(255,255,255,.8);}
+  .search{
+    flex:1 1 220px; min-width:200px; display:flex; align-items:center; gap:8px;
+    border:1px solid var(--line); background:var(--card); border-radius:999px; padding:7px 14px;
+  }
+  .search svg{flex:0 0 auto; color:var(--muted);}
+  .search input{border:0; outline:0; background:transparent; color:var(--fg); width:100%; font-size:14px;}
+  .search input::placeholder{color:var(--muted);}
+  .sel{
+    appearance:none; border:1px solid var(--line); background:var(--card); color:var(--fg);
+    padding:8px 30px 8px 12px; border-radius:999px; font-size:13.5px; cursor:pointer;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238a8175' stroke-width='2.5'><path d='M6 9l6 6 6-6'/></svg>");
+    background-repeat:no-repeat; background-position:right 10px center;
+  }
+  .btn-random{
+    appearance:none; border:1px solid var(--line); background:var(--card); color:var(--fg);
+    padding:8px 14px; border-radius:999px; font-size:13.5px; cursor:pointer; font-weight:500;
+    display:inline-flex; align-items:center; gap:7px; transition:all .15s;
+  }
+  .btn-random:hover{border-color:var(--gold); color:var(--gold);}
+  .ratebtn{
+    appearance:none; border:1px solid var(--line); background:var(--card); color:var(--fg);
+    padding:6px 12px; border-radius:999px; font-size:12.5px; cursor:pointer; font-weight:600;
+    display:inline-flex; align-items:center; gap:5px; transition:all .15s;
+  }
+  .ratebtn:hover{border-color:var(--gold); color:var(--gold);}
+  .row2{display:flex; gap:6px; margin-top:10px; flex-wrap:wrap; align-items:center;}
+  .chip{
+    appearance:none; border:1px solid var(--line); background:transparent; color:var(--muted);
+    padding:5px 12px; border-radius:999px; font-size:12.5px; cursor:pointer; transition:all .15s;
+  }
+  .chip:hover{color:var(--fg); border-color:var(--muted);}
+  .chip.on{background:var(--green-soft); border-color:var(--green); color:var(--green);}
+  .chip .n{color:var(--muted); font-size:11px; font-weight:400; margin-left:2px;}
+  .chip.on .n{color:var(--green);}
+  .cuilabel{font-size:12.5px; color:var(--muted); font-weight:700; letter-spacing:.5px; margin-right:2px;}
+  .result-count{margin:16px 0 4px; color:var(--muted); font-size:13px;}
+  .result-count b{color:var(--fg);}
+  .locinput{
+    flex:1 1 320px; min-width:240px; display:flex; align-items:center; gap:6px;
+    border:1px solid var(--line); background:var(--card); border-radius:999px; padding:5px 6px 5px 14px;
+  }
+  .locinput svg{flex:0 0 auto; color:var(--muted);}
+  .locinput input{border:0; outline:0; background:transparent; color:var(--fg); width:100%; font-size:13.5px; min-width:0;}
+  .locinput input::placeholder{color:var(--muted);}
+  .locbtn{
+    appearance:none; border:1px solid var(--line); background:var(--card2); color:var(--fg);
+    padding:6px 13px; border-radius:999px; font-size:12.5px; cursor:pointer; font-weight:600; white-space:nowrap;
+    transition:all .15s;
+  }
+  .locbtn:hover{border-color:var(--accent); color:var(--accent);}
+  .locbtn.locme{background:var(--blue-soft); border-color:var(--blue); color:var(--blue);}
+  .locbtn.locme:hover{filter:brightness(1.05);}
+  .locbtn.working{opacity:.55; pointer-events:none;}
+  .quicklocs{display:flex; gap:6px; flex-wrap:wrap; align-items:center;}
+  .qloc{
+    appearance:none; border:1px solid var(--line); background:transparent; color:var(--muted);
+    padding:5px 12px; border-radius:999px; font-size:12.5px; cursor:pointer; transition:all .15s;
+  }
+  .qloc:hover{color:var(--fg); border-color:var(--muted);}
+  .qloc.on{background:var(--green-soft); border-color:var(--green); color:var(--green);}
+  .locnote{margin:6px 0 0; font-size:12px; color:var(--muted); display:none;}
+  .locnote.show{display:block;}
+  .dist{
+    flex:0 0 auto; background:var(--green-soft); color:var(--green); font-size:12.5px; font-weight:700;
+    padding:5px 11px; border-radius:999px; white-space:nowrap;
+  }
+  .dist.pick{background:var(--blue-soft); color:var(--blue);}
+  .rating{display:flex; gap:2px; align-items:center; margin-top:-2px;}
+  .rating img{width:16px; height:16px; display:block;}
+  .rating .lb{font-size:11px; color:var(--muted); margin-right:4px; letter-spacing:.3px;}
+
+  main{padding-bottom:40px; min-height:50vh;}
+  .grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:20px; margin-top:8px;}
+  .card{
+    background:var(--card); border:1px solid var(--line); border-radius:var(--radius); overflow:hidden;
+    box-shadow:var(--shadow); display:flex; flex-direction:column; transition:transform .18s, box-shadow .18s;
+  }
+  .card:hover{transform:translateY(-3px); box-shadow:0 6px 14px rgba(70,50,30,.12), 0 20px 40px rgba(70,50,30,.1);}
+  .ph{position:relative; aspect-ratio:16/9; overflow:hidden; background:var(--card2);}
+  .ph img{width:100%; height:100%; object-fit:cover; display:block; transition:opacity .25s;}
+  @supports not (aspect-ratio: 16 / 9){
+    .ph{height:195px;}
+    .modal .mph{height:230px;}
+  }
+  .ph .dots{position:absolute; left:0; right:0; bottom:8px; display:flex; gap:6px; justify-content:center;}
+  .ph .dot{width:7px; height:7px; border-radius:50%; background:rgba(255,255,255,.55); cursor:pointer; border:0; padding:0;}
+  .ph .dot.on{background:#fff; width:18px; border-radius:99px;}
+  .badges{position:absolute; top:10px; left:10px; display:flex; gap:6px; flex-wrap:wrap;}
+  .b{
+    font-size:11px; font-weight:600; padding:3px 9px; border-radius:999px; color:#fff; letter-spacing:.2px;
+    backdrop-filter:blur(4px); box-shadow:0 1px 4px rgba(0,0,0,.25);
+  }
+  .b.michelin{background:rgba(169,121,31,.95);}
+  .b.room{background:rgba(63,125,90,.94);}
+  .b.sea{background:rgba(49,99,143,.92);}
+  .b.building{background:rgba(70,60,45,.82);}
+  .b.hot{background:rgba(176,53,43,.9);}
+  .b.cuisine{background:rgba(60,70,120,.9);}
+  .body{padding:16px 16px 14px; display:flex; flex-direction:column; gap:10px; flex:1;}
+  .title-row{display:flex; align-items:flex-start; justify-content:space-between; gap:10px;}
+  .title-row h3{font-size:18px; font-weight:700; line-height:1.3;}
+  .title-row .en{font-size:11.5px; color:var(--muted); font-weight:400; margin-top:2px;}
+  .price{
+    flex:0 0 auto; background:var(--accent-soft); color:var(--accent2); font-size:13px; font-weight:700;
+    padding:5px 11px; border-radius:999px; white-space:nowrap;
+  }
+  .cuisine-tag{
+    align-self:flex-start; font-size:12px; font-weight:600; color:#fff; background:var(--blue);
+    padding:3px 11px; border-radius:999px; letter-spacing:.4px;
+  }
+  .intro{font-size:13px; color:var(--muted); display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;}
+  .tip{
+    font-size:12.5px; color:var(--fg); background:var(--gold-soft); border:1px solid var(--line);
+    border-radius:10px; padding:7px 10px; line-height:1.5; margin-top:8px;
+  }
+  .info{display:flex; flex-direction:column; gap:6px; font-size:12.8px; color:var(--fg);}
+  .info .it{display:flex; gap:8px; align-items:flex-start;}
+  .info svg{flex:0 0 auto; margin-top:2px; color:var(--muted);}
+  .info .addr{color:var(--muted);}
+  .dishes{display:flex; flex-wrap:wrap; gap:6px;}
+  .dish{
+    font-size:12px; background:var(--card2); border:1px solid var(--line); color:var(--fg);
+    padding:3px 10px; border-radius:999px;
+  }
+  .acts{display:flex; gap:8px; margin-top:auto; padding-top:4px; flex-wrap:wrap;}
+  .act{
+    flex:1; min-width:84px; text-align:center; text-decoration:none; border-radius:10px;
+    padding:9px 8px; font-size:13px; font-weight:600; border:1px solid var(--line); color:var(--fg);
+    background:var(--card); display:inline-flex; align-items:center; justify-content:center; gap:6px; cursor:pointer;
+    transition:all .15s;
+  }
+  .act svg{flex:0 0 auto;}
+  .act:hover{border-color:var(--accent); color:var(--accent);}
+  .act.primary{background:var(--accent); border-color:var(--accent); color:#fff;}
+  .act.primary:hover{background:var(--accent2);}
+
+  .empty{text-align:center; padding:70px 20px; color:var(--muted);}
+  .empty .big{font-size:42px; margin-bottom:10px;}
+
+  /* modal */
+  .mask{
+    position:fixed; top:0; right:0; bottom:0; left:0; z-index:100; background:rgba(0,0,0,.55); display:none;
+    align-items:center; justify-content:center; padding:20px;
+  }
+  .mask.open{display:flex;}
+  .modal{
+    background:var(--card); color:var(--fg); border-radius:20px; width:92vw; max-width:860px; max-height:92vh;
+    overflow:auto; box-shadow:0 30px 80px rgba(0,0,0,.4); animation:pop .2s ease;
+  }
+  @keyframes pop{from{transform:scale(.96); opacity:0;} to{transform:scale(1); opacity:1;}}
+  .modal .mph{position:relative; aspect-ratio:16/8; background:var(--card2); overflow:hidden;}
+  .modal .mph img{width:100%; height:100%; object-fit:cover; display:none;}
+  .modal .mph img.on{display:block;}
+  .modal .mph .nav{
+    position:absolute; top:50%; transform:translateY(-50%); width:38px; height:38px; border-radius:50%;
+    border:0; background:rgba(0,0,0,.42); color:#fff; font-size:20px; cursor:pointer; display:flex;
+    align-items:center; justify-content:center;
+  }
+  .modal .mph .nav.prev{left:12px;}
+  .modal .mph .nav.next{right:12px;}
+  .modal .mph .close{
+    position:absolute; top:12px; right:12px; width:38px; height:38px; border-radius:50%; border:0;
+    background:rgba(0,0,0,.45); color:#fff; font-size:18px; cursor:pointer;
+  }
+  .modal .mbody{padding:22px 24px 26px;}
+  .modal .mtop{display:flex; gap:12px; align-items:flex-start; flex-wrap:wrap; margin-bottom:6px;}
+  .modal h2{font-size:24px; font-weight:700; line-height:1.3;}
+  .modal .men{color:var(--muted); font-size:13px;}
+  .modal .mtags{display:flex; gap:6px; flex-wrap:wrap; margin:10px 0 4px;}
+  .mtag{font-size:12px; padding:4px 11px; border-radius:999px; border:1px solid var(--line); background:var(--card2);}
+  .mcols{display:grid; grid-template-columns:1fr 1fr; gap:14px 26px; margin-top:14px;}
+  @media (max-width:640px){.mcols{grid-template-columns:1fr;}}
+  .mfield{display:flex; gap:10px; align-items:flex-start; font-size:14px;}
+  .mfield svg{flex:0 0 auto; margin-top:3px; color:var(--accent);}
+  .mfield .lb{color:var(--muted); font-size:12px; display:block; margin-bottom:1px;}
+  .mdishes{display:flex; flex-wrap:wrap; gap:7px; margin-top:4px;}
+  .mintro{margin-top:14px; padding:12px 14px; background:var(--card2); border-radius:12px; font-size:13.5px; color:var(--fg);}
+  .mtip{
+    margin-top:10px; padding:12px 14px; background:var(--gold-soft); border:1px solid var(--line);
+    border-radius:12px; font-size:13px; color:var(--fg); line-height:1.65;
+  }
+  .mtip b{color:var(--gold);}
+  .macts{display:flex; gap:10px; margin-top:18px; flex-wrap:wrap;}
+  .mact{
+    flex:1; min-width:130px; text-decoration:none; text-align:center; border-radius:12px; padding:12px 10px;
+    font-size:14px; font-weight:600; border:1px solid var(--line); background:var(--card); color:var(--fg);
+    display:inline-flex; align-items:center; justify-content:center; gap:7px; transition:all .15s;
+  }
+  .mact svg{flex:0 0 auto;}
+  .mact:hover{border-color:var(--accent); color:var(--accent);}
+  .mact.primary{background:var(--accent); border-color:var(--accent); color:#fff;}
+  .mact.primary:hover{background:var(--accent2);}
+
+  /* random category chooser */
+  .rndmask{
+    position:fixed; top:0; right:0; bottom:0; left:0; z-index:110; background:rgba(0,0,0,.55); display:none;
+    align-items:center; justify-content:center; padding:20px;
+  }
+  .rndmask.open{display:flex;}
+  .rndbox{
+    background:var(--card); color:var(--fg); border-radius:20px; width:92vw; max-width:520px;
+    padding:26px; box-shadow:0 30px 80px rgba(0,0,0,.4); animation:pop .2s ease;
+  }
+  .rndbox h3{font-size:19px; margin-bottom:4px;}
+  .rndbox .sub{font-size:13px; color:var(--muted); margin-bottom:16px;}
+  .rndopts{display:flex; flex-direction:column; gap:10px;}
+  .rndopt{
+    appearance:none; border:1px solid var(--line); background:var(--card2); color:var(--fg);
+    padding:14px 16px; border-radius:14px; font-size:15px; font-weight:600; cursor:pointer; text-align:left;
+    display:flex; align-items:center; gap:12px; transition:all .15s;
+  }
+  .rndopt:hover{border-color:var(--accent); color:var(--accent); transform:translateX(2px);}
+  .rndopt .ic{width:38px; height:38px; border-radius:10px; flex:0 0 auto; display:flex; align-items:center; justify-content:center; background:var(--accent-soft); color:var(--accent);}
+  .rndopt .meta{font-size:12px; color:var(--muted); font-weight:400; margin-top:1px;}
+  .rndopt .n{margin-left:auto; font-size:12px; color:var(--muted); font-weight:400;}
+
+  /* rating admin panel */
+  .ratemask{
+    position:fixed; top:0; right:0; bottom:0; left:0; z-index:110; background:rgba(0,0,0,.55); display:none;
+    align-items:center; justify-content:center; padding:20px;
+  }
+  .ratemask.open{display:flex;}
+  .ratebox{
+    background:var(--card); color:var(--fg); border-radius:20px; width:92vw; max-width:660px;
+    max-height:86vh; overflow:auto; padding:22px 24px; box-shadow:0 30px 80px rgba(0,0,0,.4);
+    animation:pop .2s ease;
+  }
+  .ratebox h3{font-size:18px; margin:0;}
+  .rate-hint{font-size:12px; color:var(--muted); margin:8px 0 10px;}
+  .rate-row{
+    display:flex; align-items:center; gap:10px; padding:8px 2px;
+    border-bottom:1px solid var(--line); flex-wrap:wrap;
+  }
+  .rate-row:last-child{border-bottom:0;}
+  .rate-row .rn{flex:1 1 160px; min-width:150px; font-size:13.5px; font-weight:600;}
+  .rate-row .rcat{font-size:11px; color:var(--muted); font-weight:400; margin-left:5px;}
+  .rate-bells{display:flex; gap:3px; align-items:center;}
+  .rate-bells button{
+    appearance:none; border:0; background:none; cursor:pointer; padding:2px; border-radius:8px; transition:all .12s;
+  }
+  .rate-bells button:hover{background:var(--gold-soft); transform:scale(1.08);}
+  .rate-bells img{width:22px; height:22px; display:block;}
+  .rate-clear{
+    appearance:none; border:1px solid var(--line); background:transparent; color:var(--muted);
+    font-size:11.5px; padding:3px 9px; border-radius:999px; cursor:pointer;
+  }
+  .rate-clear:hover{border-color:var(--accent); color:var(--accent);}
+  .rate-sync{
+    display:flex; align-items:center; gap:8px; margin:8px 0 10px; flex-wrap:wrap;
+  }
+  .rate-sync input{
+    flex:1 1 220px; min-width:180px; appearance:none; border:1px solid var(--line); border-radius:10px;
+    background:#fff; color:inherit; font-size:12.5px; padding:7px 10px; outline:none;
+  }
+  .rate-sync input:focus{border-color:var(--accent);}
+  #rateStorageHint{font-weight:600; color:var(--accent);}
+
+  .toast{
+    position:fixed; left:50%; bottom:34px; transform:translateX(-50%) translateY(20px); z-index:120;
+    background:rgba(30,26,20,.92); color:#fff; font-size:13.5px; padding:11px 18px; border-radius:999px;
+    opacity:0; pointer-events:none; transition:all .25s; box-shadow:0 8px 24px rgba(0,0,0,.3); max-width:86vw; text-align:center;
+  }
+  .toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+
+  footer.site{border-top:1px solid var(--line); padding:26px 0 34px; background:var(--card2);}
+  .foot{max-width:1180px; margin:0 auto; padding:0 18px; display:flex; gap:16px; flex-wrap:wrap; justify-content:space-between;}
+  .foot .note{font-size:12px; color:var(--muted); max-width:720px;}
+  .foot .src{font-size:12px; color:var(--muted); text-align:right;}
+
+  @media (max-width:720px){
+    .head-meta{width:100%; margin-left:0;}
+    .grid{grid-template-columns:1fr;}
+    .acts .act{min-width:0;}
+  }
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="head-inner">
+    <div class="brand">
+      <div class="logo" title="叮当大口吃饭"><img src="images/logo.jpg" alt="叮当大口吃饭贴图"></div>
+      <div>
+        <h1>DataGalaxy干饭任意门</h1>
+      </div>
+    </div>
+    <div class="head-meta">
+      <span class="updated">资料更新至 2026-08</span>
+      <span>共 <b id="totalCount" style="color:var(--fg)">0</b> 家</span>
+      <button class="ratebtn" id="rateBtn" type="button">🔔 叮当评分</button>
+    </div>
+  </div>
+</header>
+
+<div class="toolbar">
+  <div class="wrap">
+    <div class="row1">
+      <div class="tabs" id="tabs" role="tablist" aria-label="餐厅类别"></div>
+      <div class="search">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+        <input id="searchInput" type="search" placeholder="搜餐厅名、菜系、招牌菜…" aria-label="搜索餐厅">
+      </div>
+      <select class="sel" id="sortSel" aria-label="按人均排序">
+        <option value="default">默认排序</option>
+        <option value="asc">人均从低到高</option>
+        <option value="desc">人均从高到低</option>
+        <option value="nearest">距离从近到远</option>
+      </select>
+      <button class="btn-random" id="randomBtn" type="button">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 3h5v5"/><path d="M4 20L21 3"/><path d="M21 16v5h-5"/><path d="M15 15l6 6"/><path d="M4 4l5 5"/></svg>
+        <span class="rndlabel">让叮当帮你选</span>
+      </button>
+    </div>
+    <div class="row2" id="cuibar">
+      <span class="cuilabel">菜系</span>
+      <div class="chips" id="cuiTabs" role="tablist" aria-label="菜系筛选"></div>
+    </div>
+    <div class="row2" id="locbar">
+      <div class="locinput">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-5.5-7-11a7 7 0 0 1 14 0c0 5.5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
+        <input id="locInput" type="text" placeholder="输入当前位置（大厦、地铁站、街名…）" aria-label="当前位置">
+        <button class="locbtn" id="locGo" type="button">定位</button>
+        <button class="locbtn locme" id="locMe" type="button">使用我的位置</button>
+      </div>
+      <div class="quicklocs" id="quickLocs" aria-label="常用位置">
+        <button class="qloc on" type="button" data-lat="22.28044" data-lng="114.17693">新鸿基中心（公司）</button>
+        <button class="qloc" type="button" data-lat="22.28190" data-lng="114.17320">会展站</button>
+        <button class="qloc" type="button" data-lat="22.27600" data-lng="114.17250">湾仔站</button>
+        <button class="qloc" type="button" data-lat="22.28183" data-lng="114.15828">中环</button>
+        <button class="qloc" type="button" data-lat="22.27920" data-lng="114.16580">金钟</button>
+        <button class="qloc" type="button" data-lat="22.28208" data-lng="114.18916">铜锣湾</button>
+        <button class="qloc" type="button" data-lat="22.29887" data-lng="114.17412">尖沙咀</button>
+        <button class="qloc" type="button" data-lat="22.30481" data-lng="114.17171">佐敦</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<main class="wrap">
+  <div class="result-count" id="resultCount" aria-live="polite"></div>
+  <div class="grid" id="grid"></div>
+  <div class="empty" id="empty" style="display:none">
+    <div class="big">🍽️</div>
+    <div>没有符合条件的餐厅，试试放宽筛选条件</div>
+  </div>
+</main>
+
+<footer class="site">
+  <div class="foot">
+    <div class="note">
+      人均价格与营业时间为公开渠道综合参考值，可能随时调整，请以餐厅当日公布为准；热门餐厅建议提前致电订座。
+      环境图片来自餐厅官网、携程旅行及 OpenRice 等公开渠道，仅作参考。
+    </div>
+    <div class="src">DataGalaxy 干饭任意门<br>覆盖湾仔 / 中环 / 金钟 / 铜锣湾 / 尖沙咀 / 佐敦等地<br>资料整理于 2026 年 8 月</div>
+  </div>
+</footer>
+
+<div class="rndmask" id="rndmask">
+  <div class="rndbox" role="dialog" aria-modal="true" aria-labelledby="rndTitle">
+    <h3 id="rndTitle">先确定今天的目的 🎯</h3>
+    <div class="sub">叮当会先按目的类目筛掉不合适的店，再帮你掷骰子～</div>
+    <div class="rndopts" id="rndopts"></div>
+  </div>
+</div>
+
+<div class="ratemask" id="ratemask">
+  <div class="ratebox" role="dialog" aria-modal="true" aria-labelledby="rateTitle">
+    <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+      <h3 id="rateTitle">🔔 叮当评分</h3>
+      <span class="rate-hint" style="margin:0;">给吃过的饭店打铃铛，1-5 铛</span>
+      <button class="locbtn" id="rateClose" type="button" style="margin-left:auto;">关闭</button>
+    </div>
+    <div class="rate-hint">评分会自动保存，刷新页面不会丢失。</div>
+    <div class="rate-hint" id="rateStorageHint"></div>
+    <div class="rate-sync">
+      <input type="text" id="pantryId" placeholder="云端同步 ID（选填，getpantry.cloud 创建后粘贴）" autocomplete="off">
+      <button class="locbtn" id="pantrySave" type="button">保存云端设置</button>
+      <span class="rate-hint" id="pantryStatus"></span>
+    </div>
+    <div id="rateList"></div>
+  </div>
+</div>
+
+<div class="mask" id="mask">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="mph" id="mph">
+      <button class="nav prev" id="prevBtn" type="button" aria-label="上一张">‹</button>
+      <button class="nav next" id="nextBtn" type="button" aria-label="下一张">›</button>
+      <button class="close" id="closeBtn" type="button" aria-label="关闭">✕</button>
+    </div>
+    <div class="mbody" id="mbody"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+const DATA = {"updated":"2026-08-26","note":"人均价格与营业时间为公开渠道综合参考值，以餐厅当日公布为准。","restaurants":[{"id":"minhwa","name":"敏华冰厅","en":"Men Wah Bing Teng","cats":["便餐"],"cuisines":"港式冰室 / 茶餐厅","cui":["茶餐厅·冰室"],"price":"HK$50–80","hours":"每日 07:00–21:30","address":"湾仔湾仔道109号壹嘉地下1号铺","mtr":"湾仔站A3出口步行约4分钟","phone":"2789 2808","dishes":["黯然销魂饭","沙嗲牛肉面","蛋挞","菠萝包","红豆冰"],"tags":["怀旧冰室","本地连锁","性价比高"],"private_room":false,"images":["images/minhwa.jpg"],"intro":"怀旧装潢的老香港味道，黯然销魂饭与菠萝包都是招牌。","tips":"黯然销魂饭分量十足，午市12:30-13:30最挤，建议11:45前或13:30后到；菠萝包趁出炉时段最香。","lat":22.276603,"lng":114.175315},{"id":"honolulu","name":"檀岛咖啡饼店","en":"Honolulu Coffee Shop","cats":["便餐"],"cuisines":"港式茶餐厅 / 饼店","cui":["茶餐厅·冰室"],"price":"HK$40–70","hours":"每日 07:00–22:00","address":"湾仔轩尼诗道176-178号地下及阁楼","mtr":"湾仔站A5出口步行约4分钟","phone":"2575 1823","dishes":["酥皮蛋挞","咖央西多士","丝袜奶茶","叉烧双蛋饭","菠萝油"],"tags":["1940年代老字号","蛋挞名店","游客必吃"],"private_room":false,"images":["images/honolulu-1.jpg","images/honolulu-2.jpg"],"intro":"开业逾八十年的老牌茶餐厅，招牌酥皮蛋挞层层酥脆。","tips":"酥皮蛋挞是人气王，下午茶时段出炉即卖；早餐套餐性价比高，11点前到基本有位。","lat":22.277939,"lng":114.176971},{"id":"sushilok","name":"鮨樂","en":"Sushi Lok","cats":["便餐"],"cuisines":"日式寿司 / 和食","cui":["日料"],"price":"HK$120–250","hours":"每日 11:30–22:00","address":"湾仔港湾道30号新鸿基中心1楼137-139号铺","mtr":"会展站A3出口步行约5分钟","phone":"2806 2611","dishes":["特上寿司拼盘","刺身盛合","火炙寿司","鳗鱼饭定食"],"tags":["大厦内","日式料理","60座宽敞"],"private_room":false,"images":["images/sushilok.jpg"],"intro":"大厦内的日式寿司店，午餐定食与寿司拼盘方便快捷。","tips":"就在公司楼下，午市12:00-13:00最挤，赶时间可13:00后去；第一次来点特上寿司拼盘最稳。","lat":22.280329,"lng":114.176938},{"id":"tajimaya","name":"Grill Tajimaya","en":"Grill Tajimaya","cats":["便餐"],"cuisines":"日式烤肉 / 半自助","cui":["日料"],"price":"HK$168–300","hours":"周一至六 11:00–21:00（周日及公众假期休息）","address":"湾仔港湾道30号新鸿基中心2楼2A-1铺","mtr":"会展站A3出口步行约5分钟","phone":"2838 9971","dishes":["无限时半自助晚餐","和牛寿喜烧","炭火烤和牛","日式甜品"],"tags":["大厦内","半自助$168起","环境开阔"],"private_room":false,"images":["images/tajimaya-1.jpg","images/tajimaya-2.jpg"],"intro":"日式烤肉专门店，无限时半自助配主菜，适合同事轻松聚餐。","tips":"半自助晚餐性价比高但建议提前订位；周日及公众假期休息，别白跑一趟。","lat":22.280329,"lng":114.176938},{"id":"jardindejade","name":"苏浙汇","en":"Jardin de Jade","cats":["聚餐"],"cuisines":"江浙沪菜","cui":["江浙沪菜"],"price":"HK$250–450","hours":"每日 11:30–15:00 / 17:30–22:00","address":"湾仔港湾道30号新鸿基中心地下G3-4铺","mtr":"会展站A3出口步行约5分钟（大厦内）","phone":"3528 0228","dishes":["樟茶鸭","清蒸鲥鱼","花胶红烧肉","苏浙汤包","南瓜八宝饭"],"tags":["大厦内","米其林星级品牌","宴客体面"],"private_room":true,"images":["images/jardin-1.jpg","images/jardin-2.jpg"],"intro":"连续多年获米其林星级荣誉的沪菜名店，装潢中西合璧，招待商务客人也拿得出手。","tips":"米其林星级沪菜，商务午餐宜提前订位；樟茶鸭和汤包值得点，人多加一道花胶红烧肉。","lat":22.280329,"lng":114.176938},{"id":"kams","name":"甘牌烧鹅","en":"Kam's Roast Goose","cats":["聚餐"],"cuisines":"粤菜 / 烧腊","cui":["粤菜"],"price":"HK$150–250","hours":"每日 11:30–21:30","address":"湾仔轩尼诗道226号宝华商业中心地铺","mtr":"湾仔站A5出口步行约4分钟","phone":"2520 1110","dishes":["甘牌烧鹅","蜜汁叉烧","烧乳猪","烧鹅叉烧双拼","太子捞面"],"tags":["米其林一星","排队热门","镛记班底"],"private_room":false,"images":["images/kams-2.jpg","images/kams-1.jpg"],"intro":"连续多年蝉联米其林一星，烧鹅皮脆肉嫩，高峰期需排队。","tips":"米其林一星常年排队，建议11:30开门就到或13:30后错峰；烧鹅每日限量，太晚可能售罄，一人可点烧鹅叉烧双拼饭。","lat":22.27766,"lng":114.1753},{"id":"underbridge","name":"桥底辣蟹","en":"Under Bridge Spicy Crab","cats":["聚餐"],"cuisines":"粤菜 / 避风塘海鲜","cui":["粤菜"],"price":"HK$350–600","hours":"每日 11:00–次日01:00","address":"湾仔骆克道391号金禧大厦地铺及1楼","mtr":"湾仔站A1出口步行约8分钟","phone":"2893 1289","dishes":["避风塘炒蟹","避风塘濑尿虾","椒盐鲜鱿","豉汁炒蜆"],"tags":["明星饭堂","避风塘菜始祖","深夜营业"],"private_room":false,"images":["images/underbridge-1.jpg","images/underbridge-2.jpg"],"intro":"发源于鹅颈桥底的避风塘名店，香辣惹味，适合朋友聚餐。","tips":"避风塘炒蟹按大小计价，点单前先问清价格；晚市19:00后人多建议订位，营业到凌晨1点，宵夜也合适。","lat":22.27968,"lng":114.17998},{"id":"heekee","name":"喜记避风塘炒辣蟹（元祖老店）","en":"Hee Kee Fried Crab Expert","cats":["聚餐"],"cuisines":"粤菜 / 避风塘海鲜","cui":["粤菜"],"price":"HK$350–550","hours":"每日 11:30–次日02:00","address":"湾仔谢斐道379-389号特丽楼地下1-4号铺","mtr":"铜锣湾站C出口步行约6分钟","phone":"2893 7565","dishes":["避风塘炒辣蟹","招牌醉鲍鱼","椒盐濑尿虾","蟹油炒面"],"tags":["1965年元祖","名人饭堂","蔡澜题字"],"private_room":false,"images":["images/heekee-1.jpg","images/heekee-2.jpg"],"intro":"香港避风塘炒蟹的始祖老店，蒜香四溢，夜宵聚餐两相宜。","tips":"元祖避风塘炒蟹蒜香浓郁，人多可点大蟹，人少点半只或小蟹；晚市及宵夜热闹，建议先订位。","lat":22.28004,"lng":114.17968},{"id":"chungshouse","name":"钟菜馆（北海中心店）","en":"Chung's House (CNT Tower)","cats":["聚餐"],"cuisines":"粤菜 / 点心 / 火锅","cui":["粤菜","火锅·鸡煲"],"price":"HK$60–150","hours":"每日 10:00–16:00 / 18:00–22:00","address":"湾仔轩尼诗道338号北海中心2楼","mtr":"湾仔站A1出口步行约5分钟","phone":"8300 8043","dishes":["鲜虾饺","烧卖王","黑松露野菌包","酥皮叉烧","虾籽烧鹅皇"],"tags":["稻香集团","点心平价$7起","早茶时段优惠"],"private_room":false,"images":["images/taoxiang-1.jpg"],"intro":"稻香集团旗下茶楼，点心亲民平价，午市优惠时段常排长龙。","tips":"点心$7起很划算，但早茶午市优惠时段人超多，想慢慢叹茶建议10点前到；人多可多试几款点心。","lat":22.2782,"lng":114.178},{"id":"leiking","name":"利景酒家","en":"Lei King Restaurant","cats":["聚餐"],"cuisines":"粤菜 / 传统小菜","cui":["粤菜"],"price":"HK$200–400","hours":"每日 07:30–23:00","address":"湾仔史钊域道1号","mtr":"湾仔站A1出口步行约6分钟","phone":"2362 2982","dishes":["笼仔蒜茸蒸斑球饭","避风塘海中虾","鲜虾饺","时令小菜"],"tags":["名厨主理","传统粤菜","有包间"],"private_room":true,"images":["images/leiking-1.jpg","images/leiking-2.jpg"],"intro":"由地铺到一楼的传统粤菜馆，空间感足，小菜镬气十足。","tips":"传统粤菜镬气足，笼仔蒜茸蒸斑球饭是招牌；有包间，人多聚餐可提前订房，早上7:30就开始营业。","lat":22.27825,"lng":114.176653},{"id":"leigarden","name":"利苑酒家","en":"Lei Garden (Wan Chai)","cats":["商务宴请"],"cuisines":"粤菜 / 点心","cui":["粤菜"],"price":"HK$250–500","hours":"每日 11:30–15:00 / 18:00–22:00","address":"湾仔轩尼诗道338号北海中心1楼","mtr":"湾仔站A1出口步行约5分钟","phone":"2892 0333","dishes":["冰烧三层肉","金银菜炖猪肺汤","龙虾泡饭","鲍汁凤爪","香煎萝卜糕"],"tags":["米其林指南餐厅","富豪饭堂","贵宾房"],"private_room":true,"images":["images/leigarden-1.jpg","images/leigarden-2.jpg"],"intro":"香港老牌粤菜名店，服务细致，贵宾房适合正式宴请。","tips":"富豪饭堂，建议提前订位；冰烧三层肉限量，去晚了可能没有；商务午餐点龙虾泡饭最稳妥。","lat":22.2782,"lng":114.178},{"id":"fooklammoon","name":"福临门（利文楼）","en":"Fook Lam Moon","cats":["商务宴请"],"cuisines":"粤菜 / 鲍参翅肚","cui":["粤菜"],"price":"HK$800–1200","hours":"每日 11:30–15:00 / 18:00–23:00","address":"湾仔庄士敦道35-45号利文楼地下3号铺","mtr":"湾仔站B2出口步行约3分钟","phone":"2866 0663","dishes":["烧乳猪","笋尖鲜虾饺","八宝鸭","脆皮鸡","鱼翅灌汤饺"],"tags":["富豪饭堂","米其林常客","私隐包间"],"private_room":true,"images":["images/fooklam-1.jpg","images/fooklam-2.jpg"],"intro":"城中名人富豪饭堂，传统粤菜功夫扎实，私隐度高。","tips":"城中富豪饭堂私隐度高，烧乳猪与鱼翅灌汤饺是名物；建议提前一天订位并预订招牌菜式。","lat":22.277836,"lng":114.176874},{"id":"forum","name":"富临饭店（阿一鲍鱼）","en":"Forum Restaurant","cats":["商务宴请"],"cuisines":"粤菜 / 鲍参翅肚","cui":["粤菜"],"price":"HK$800–1500","hours":"每日 11:30–14:30 / 18:00–23:00","address":"铜锣湾告士打道255-257号信和广场1楼","mtr":"铜锣湾站C出口步行约3分钟","phone":"2869 8282","dishes":["阿一鲍鱼","古法盐焗鸡","鲍汁鹅掌","富临脆皮鸡","阿一炒饭"],"tags":["米其林三星","阿一鲍鱼","顶级服务"],"private_room":true,"images":["images/forum-1.jpg","images/forum-2.jpg"],"intro":"杨贯一创立的殿堂级粤菜府，鲍鱼闻名世界，服务一丝不苟。","tips":"阿一鲍鱼殿堂级，需提前订位并预订鲍鱼菜式；正式宴请建议提前15分钟到，从容入座。","lat":22.2811,"lng":114.18228},{"id":"goldenbauhinia","name":"金紫荆生记粤菜厅","en":"Golden Bauhinia (Sang Kee)","cats":["商务宴请"],"cuisines":"粤菜 / 手工菜","cui":["粤菜"],"price":"HK$500–800","hours":"每日 11:30–15:30 / 18:00–23:00","address":"湾仔博览道1号香港会议展览中心博览商场","mtr":"会展站B出口步行约3分钟","phone":"2582 7728","dishes":["焦糖黑毛猪叉烧","玻璃脆皮贵妃鸡","杏汁炖白肺","堂剪鸿运乳猪","龙井烟熏素鹅"],"tags":["米其林推介","维港海景","贵宾房"],"private_room":true,"images":["images/golden-1.jpg","images/golden-2.jpg"],"intro":"会展中心内的海景粤菜厅，落地玻璃正对维港，商务饭局不失礼。","tips":"会展中心内正对维港，晚宴可要求海景位；焦糖黑毛猪叉烧是招牌，商务宴请提前订房更稳。","lat":22.2826,"lng":114.1731},{"id":"difu","name":"帝福楼","en":"Di Fu Lou (Dorsett Wan Chai)","cats":["商务宴请"],"cuisines":"粤菜 / 点心","cui":["粤菜"],"price":"HK$250–400","hours":"每日 12:00–15:00 / 18:00–23:00","address":"湾仔皇后大道东238号香港湾仔帝盛酒店1楼","mtr":"湾仔站A3出口步行约10分钟","phone":"3565 1701","dishes":["脆皮烧腩仔","想家三宝","手工点心"],"tags":["曾获米其林一星","酒店粤菜","私人包间"],"private_room":true,"images":["images/difu-1.jpg","images/difu-2.jpg"],"intro":"帝盛酒店内的粤菜餐厅，环境典雅，包间适合商务会客。","tips":"酒店粤菜环境典雅，脆皮烧腩仔和想家三宝值得点；包间宴客需提前订，午市更易有位。","lat":22.276298,"lng":114.169823},{"id":"thehua","name":"红花汇","en":"The Hua Restaurant","cats":["商务宴请"],"cuisines":"川菜 / 粤菜 / 潮州菜","cui":["川菜","粤菜","潮州菜"],"price":"HK$200–400","hours":"每日 11:30–15:00 / 18:00–23:00","address":"湾仔谢斐道303号银河大厦6-9楼","mtr":"会展站A3出口步行约7分钟","phone":"5505 5121","dishes":["金牌红花酸菜桂花鱼","椒汁鲍鱼","卤水鹅肉拼盘","黯然销魂A5和牛煎蛋饭","点心放题"],"tags":["获奖名厨主理","独立房间","90分钟点心放题"],"private_room":true,"images":["images/hua-1.jpg","images/hua-2.jpg"],"intro":"四层楼的手工中菜馆，川粤潮菜皆有，设独立包间适合宴客。","tips":"四层楼川粤潮菜皆有，90分钟点心放题适合午市围餐；独立包间宴客需提前订。","lat":22.278656,"lng":114.171099},{"id":"oneharbour","name":"港湾壹号","en":"One Harbour Road (Grand Hyatt)","cats":["商务宴请"],"cuisines":"粤菜 / 高级中餐","cui":["粤菜"],"price":"HK$700–1000","hours":"周一至五 12:00–14:30；每日 18:00–24:00","address":"湾仔港湾道1号香港君悦酒店7-8楼","mtr":"会展站A3出口步行约3分钟","phone":"2584 7722","dishes":["招牌龙虾宴","蜜汁叉烧","鲜虾饺","每日炖汤"],"tags":["米其林精选","维港海景","五星酒店服务"],"private_room":true,"images":["images/oneharbour-1.jpg","images/oneharbour-2.jpg"],"intro":"君悦酒店高层粤菜厅，正对维港，是重要商务宴请的稳妥之选。","tips":"君悦高层正对维港，重要宴请首选；晚市开到24:00，建议提前订海景位。","lat":22.28144,"lng":114.17213},{"id":"rempah","name":"Rempah Noodles","en":"Rempah Noodles","cats":["便餐"],"cuisines":"东南亚菜 / 叻沙面食","cui":["东南亚菜"],"price":"HK$100–150","hours":"周一至五 11:30–20:00；周六 11:30–18:00；周日休息","address":"湾仔轩尼诗道18号地铺","mtr":"湾仔站B2出口步行约4分钟","phone":"3618 4863","dishes":["娘惹浓厚叻沙","优质虾面","咖央多士","椰浆饭"],"tags":["人气小店","新加坡风味","午市排长龙"],"private_room":false,"images":["images/rempah-1.jpg","images/rempah-2.jpg"],"intro":"全港口碑极佳的星马面馆，叻沙汤底浓郁，咖央多士更是必试招牌。","tips":"招牌叻沙午市常排长龙，建议11:30开门就到或14:00后；咖央多士必加，堂食座位少。","lat":22.277614,"lng":114.16875},{"id":"hongkongday","name":"香港地","en":"Hong Kong Day (Johnson Centre)","cats":["便餐"],"cuisines":"港式茶餐厅","cui":["茶餐厅·冰室"],"price":"HK$80–120","hours":"每日 07:00–22:00","address":"湾仔轩尼诗道302-308号集成中心地下8-10号铺","mtr":"湾仔站A1出口步行约3分钟","phone":"2870 0269","dishes":["招牌焗猪扒饭","瑞士鸡翼","咖喱牛腩饭","冻奶茶"],"tags":["连锁茶餐厅","环境企理","早餐午餐稳定之选"],"private_room":false,"images":["images/hongkongday-1.jpg","images/hongkongday-2.jpg"],"intro":"美心旗下连锁茶餐厅，出品稳阵、位置方便，是湾仔日常午餐的安全牌。","tips":"美心连锁出品稳阵，午市12:30-13:30高峰；焗猪扒饭现焗要等约15分钟，赶时间可点碟头饭。","lat":22.2782,"lng":114.178},{"id":"samsen","name":"Samsen 泰面","en":"Samsen Thai Noodles (Wan Chai)","cats":["便餐"],"cuisines":"泰国菜 / 泰式粉面","cui":["东南亚菜"],"price":"HK$120–200","hours":"周一至四 12:00–15:00 / 18:00–22:00；周五至日 12:00–15:00 / 18:00–23:00","address":"湾仔石水渠街68号地铺","mtr":"湾仔站A3出口步行约5分钟","phone":"2234 0001","dishes":["招牌泰式和牛浓汤河","蟹肉炒饭","泰式虎虾炒面","芒果糯米饭"],"tags":["谢霆锋同款","米其林推荐","长期排队"],"private_room":false,"images":["images/samsen-1.jpg","images/samsen-2.jpg"],"intro":"获米其林推荐的泰式街边面馆，和牛船面汤浓肉嫩，谢霆锋也专程打卡。","tips":"谢霆锋同款长期排队，建议18:00开市前到或21:00后错峰；和牛浓汤河必点，到店先登记等位。","lat":22.274219,"lng":114.173997},{"id":"ippudo","name":"一风堂","en":"Ippudo (Hysan Place)","cats":["便餐"],"cuisines":"日式拉面 / 简餐","cui":["日料"],"price":"HK$90–150","hours":"每日 11:30–21:00","address":"铜锣湾轩尼诗道500号希慎广场14楼1403号铺","mtr":"铜锣湾站F2出口直达希慎广场","phone":"2892 2387","dishes":["白丸元味","赤丸新味","日式煎饺","叉烧丼"],"tags":["日本连锁","猪骨汤底","商场内"],"private_room":false,"images":["images/ippudo-1.jpg","images/ippudo-2.jpg"],"intro":"日本博多拉面名店，浓醇猪骨汤底，铜锣湾商场内即到，午市翻台快。","tips":"希慎广场14楼，午市翻台快，13:00后基本不用等；白丸加溏心蛋是经典吃法。","lat":22.280013,"lng":114.18408},{"id":"crystaljade","name":"翡翠拉面小笼包","en":"Crystal Jade La Mian Xiao Long Bao","cats":["便餐"],"cuisines":"江浙菜 / 上海菜","cui":["江浙沪菜"],"price":"HK$100–200","hours":"每日 11:00–22:00","address":"湾仔庄士敦道181号大有广场3楼310号铺","mtr":"湾仔站A2出口步行约3分钟","phone":"2573 8844","dishes":["招牌小笼包","担担面","红烧牛肉面","生煎锅贴"],"tags":["连锁名店","手工拉面","商场内"],"private_room":false,"images":["images/crystaljade-1.jpg","images/crystaljade-2.jpg"],"intro":"源自新加坡的上海菜名店，小笼包皮薄多汁，拉面现点现拉。","tips":"小笼包现蒸要趁热吃；午市12:30高峰建议错峰；商场内环境舒适，聊天也不赶。","lat":22.277836,"lng":114.176874},{"id":"fengwei","name":"丰鲔日本蓝鳍吞拿鱼专门店","en":"Feng Wei Bluefin Tuna Specialty","cats":["便餐"],"cuisines":"日式海鲜丼 / 寿司","cui":["日料"],"price":"HK$100–200","hours":"每日 12:00–21:00","address":"铜锣湾渣甸坊30-36号利发大厦地下5号铺","mtr":"铜锣湾站F1出口步行约4分钟","phone":"9344 3657","dishes":["梦之丼","蓝鳍吞拿鱼刺身盛","大拖罗寿司","吞拿鱼拼盘"],"tags":["蓝鳍吞拿鱼","海产直送","隐藏小店"],"private_room":false,"images":["images/fengwei-1.jpg","images/fengwei-2.jpg"],"intro":"以日本蓝鳍吞拿鱼批发起家的小店，主打新鲜大拖罗丼饭，性价比高。","tips":"蓝鳍吞拿鱼专门店，大拖罗可能限量，想试要早去；小店座位不多，13:30后较空。","lat":22.279383,"lng":114.185461},{"id":"happycafe","name":"快乐顺景","en":"Happy Cafe (Lan Fong Road)","cats":["便餐"],"cuisines":"港式茶餐厅 / 冰室","cui":["茶餐厅·冰室"],"price":"HK$50–100","hours":"每日 07:00–21:00","address":"铜锣湾兰芳道3号地下（由湾仔快乐饼店 x 顺景茶餐厅班底重开）","mtr":"铜锣湾站F1出口步行约5分钟","phone":"6711 9298","dishes":["瑞士汁鸡髀捞公仔面","黑椒牛扒餐","快乐忌廉筒","红豆沙翁"],"tags":["湾仔老字号","怀旧冰室","忌廉筒名物"],"private_room":false,"images":["images/happycafe-1.jpg","images/happycafe-2.jpg"],"intro":"湾仔老字号顺景茶餐厅与快乐饼店联手重开的怀旧冰室，忌廉筒与瑞士鸡髀是招牌。","tips":"怀旧冰室氛围感足，忌廉筒是名物可作饭后甜品；瑞士汁鸡髀捞面分量足，下午茶时段最舒服。","lat":22.278861,"lng":114.184885},{"id":"bistrocity","name":"城中馆子","en":"bistrocity @ City Hall","cats":["聚餐"],"cuisines":"港式茶餐厅 / 中西融合","cui":["茶餐厅·冰室"],"price":"HK$100–200","hours":"每日 12:00–21:00","address":"中环爱丁堡广场5号大会堂低座1楼","mtr":"中环站K出口步行约6分钟","phone":"2521 1132","dishes":["滑蛋叉烧饭","咖喱鸡扒饭","沙爹牛肉煲仔面","怀旧西多士"],"tags":["大会堂新晋食店","港式优雅","文青打卡"],"private_room":false,"images":["images/bistrocity-1.jpg","images/bistrocity-2.jpg"],"intro":"大会堂内的新派港式食店，将怀旧茶记味道融入艺术空间，环境雅致。","tips":"大会堂新派港式，环境优雅适合打卡；滑蛋叉烧饭和怀旧西多士是招牌，晚市可慢慢坐。","lat":22.28195,"lng":114.1621},{"id":"lippo","name":"力宝轩","en":"Lippo Chiuchow Restaurant","cats":["聚餐"],"cuisines":"粤菜 / 潮州菜","cui":["粤菜","潮州菜"],"price":"HK$180–300","hours":"每日 11:00–22:00","address":"金钟金钟道89号力宝中心地下4号铺","mtr":"金钟站B出口步行约3分钟","phone":"2526 1168","dishes":["卤水鹅片","潮州冻蟹","蚝仔烙","点心"],"tags":["正宗潮州菜","行政总厨主理","商厦内"],"private_room":true,"images":["images/lippo-1.jpg","images/lippo-2.jpg"],"intro":"力宝中心内的潮州菜馆，卤水与巧手粤菜俱佳，金钟商厦上班族宴客方便。","tips":"金钟商厦内午市人多，12:30高峰建议错峰；卤水鹅片必点，两人以上可加蚝仔烙分食。","lat":22.27949,"lng":114.163316},{"id":"maxims","name":"美心皇宫","en":"Maxim's Palace (City Hall)","cats":["聚餐"],"cuisines":"粤菜 / 点心","cui":["粤菜"],"price":"HK$200–350","hours":"周一至六 11:00–15:00 / 17:30–22:30；周日及假日 09:00–15:00 / 17:30–22:30","address":"中环爱丁堡广场5-7号大会堂低座2楼","mtr":"中环站K出口步行约6分钟","phone":"2521 1303","dishes":["虾饺","叉烧包","烧卖","马拉糕","山竹牛肉"],"tags":["点心车老字号","大会堂地标","宴客体面"],"private_room":true,"images":["images/maxims-1.jpg","images/maxims-2.jpg"],"intro":"保留传统点心车的经典粤菜酒楼，大会堂地标，饮茶聚餐皆有仪式感。","tips":"保留传统点心车，饮茶有仪式感；周末早茶建议9点前到，11点后要排队，点心车一推出来就抢手。","lat":22.28195,"lng":114.1621},{"id":"lockcha","name":"乐茶轩","en":"LockCha Tea House (Hong Kong Park)","cats":["聚餐"],"cuisines":"茶艺馆 / 素食点心","cui":["其他"],"price":"HK$150–250","hours":"每日 10:00–20:00（每月第二个周二休息）","address":"金钟香港公园罗桂祥茶艺馆地下","mtr":"金钟站C1出口步行约8分钟","phone":"2801 7177","dishes":["素虾饺","素烧卖","精选茗茶","素炒面"],"tags":["公园茶艺馆","全素点心","古色古香"],"private_room":false,"images":["images/lockcha-1.jpg","images/lockcha-2.jpg"],"intro":"香港公园内的茶艺馆，古色古香，以精致素点心与多款茗茶闻名，安静雅致。","tips":"香港公园内环境清幽，适合安静聚餐；全素点心第一次去可点素虾饺配精选茗茶；每月第二个周二休息，别扑空。","lat":22.277893,"lng":114.162696},{"id":"kikusan","name":"Kikusan","en":"Kikusan (The Landmark)","cats":["聚餐"],"cuisines":"江浙菜 / 日料融合","cui":["江浙沪菜","日料"],"price":"HK$200–350","hours":"每日 11:30–23:00","address":"中环皇后大道中15号置地广场中庭地库B13-16号铺","mtr":"中环站G出口直达置地广场","phone":"2521 3344","dishes":["三文鱼茶渍饭","和牛刺身","上海小笼包","抹茶甜品"],"tags":["华和料理","置地广场","水墙设计"],"private_room":false,"images":["images/kikusan-1.jpg","images/kikusan-2.jpg"],"intro":"糅合中式与日式精髓的华和料理，置地广场地库的精致餐厅，环境时尚。","tips":"置地广场地库环境时尚，三文鱼茶渍饭和和牛刺身是招牌；午市12:30高峰建议订位。","lat":22.280817,"lng":114.157722},{"id":"yuelu","name":"悦庐精致江西菜","en":"Yue Lu Jiangxi Cuisine","cats":["聚餐"],"cuisines":"赣菜 / 江西菜","cui":["其他"],"price":"HK$200–300","hours":"每日 11:30–22:00","address":"铜锣湾渣甸街50号渣甸中心6楼","mtr":"铜锣湾站F1出口步行约4分钟","phone":"3590 2953","dishes":["江西瓦罐汤","粉蒸肉","藜蒿炒腊肉","南昌炒粉"],"tags":["江西菜专门店","食材江西直送","地道风味"],"private_room":true,"images":["images/yuelu-1.jpg","images/yuelu-2.jpg"],"intro":"主打江西地道传统菜的楼上馆，食材与配料由江西直送，师傅亦来自江西。","tips":"江西菜地道，瓦罐汤每日限量建议提前电话留汤；辣度可提前说明，不吃辣一定要交代。","lat":22.28051,"lng":114.18544},{"id":"bigjj","name":"珍姐海鲜火锅饭店","en":"Big JJ Seafood Hotpot Restaurant","cats":["聚餐"],"cuisines":"港式火锅 / 海鲜","cui":["火锅·鸡煲"],"price":"HK$300–500","hours":"周一至五 08:00–02:00；周六 18:00–02:00；周日休息","address":"中环遮打道10号太子大厦地库","mtr":"中环站K出口步行约3分钟","phone":"2388 6982","dishes":["手切骟牯牛","椰子鸡煲","老兰嫩牛","炸馒头配炼奶"],"tags":["最难订位火锅店","名人饭堂","霓虹招牌"],"private_room":false,"images":["images/bigjj-1.jpg","images/bigjj-2.jpg"],"intro":"曾被誉为全港最难订位的火锅店，招牌手切骟牯牛与怀旧霓虹装潢极具氛围。","tips":"曾被誉为全港最难订位的火锅店，一定要提前几天订；招牌手切骟牯牛必点；周六晚市才开，周日休息。","lat":22.281222,"lng":114.159174},{"id":"louxia","name":"楼下火锅饭店","en":"Lou Ha Hotpot Restaurant","cats":["聚餐"],"cuisines":"港式火锅","cui":["火锅·鸡煲"],"price":"HK$300–450","hours":"每日 12:00–01:00（建议提前致电确认）","address":"铜锣湾骆克道441号骆克大厦A座地下A号铺及地库","mtr":"铜锣湾站C出口步行约5分钟","phone":"2214 9388","dishes":["手切牛肉","花胶鸡汤","海鲜拼盘","炸响铃"],"tags":["地铺火锅","街坊人气","深夜营业"],"private_room":false,"images":["images/louxia-1.jpg","images/louxia-2.jpg"],"intro":"铜锣湾地铺人气火锅店，手切牛肉与花胶鸡汤皆口碑不俗，越夜越旺。","tips":"越夜越旺，晚市建议订位；花胶鸡汤锅底先喝汤再涮肉，营业到凌晨1点，宵夜也合适。","lat":22.280122,"lng":114.181187},{"id":"yipin","name":"一品鸡煲火锅","en":"Yipin Chicken Pot (Causeway Bay)","cats":["聚餐"],"cuisines":"港式鸡煲 / 火锅","cui":["火锅·鸡煲"],"price":"HK$150–250","hours":"每日 16:30–02:30","address":"铜锣湾谢斐道483-499号新城大厦1楼全层","mtr":"铜锣湾站D出口步行约4分钟","phone":"2670 3337","dishes":["一品秘制鸡煲","炸响铃","手切牛肉","即食面"],"tags":["鸡煲名店","深夜营业","铜锣湾老店"],"private_room":false,"images":["images/yipin-1.jpg","images/yipin-2.jpg"],"intro":"以秘制鸡煲闻名的火锅店，鸡件入味麻辣鲜香，适合下班后热闹聚餐。","tips":"秘制鸡煲第一次建议微辣起步，吃完加即食面吸汁是灵魂；16:30开市，下班直接去基本不用等。","lat":22.281177,"lng":114.183025},{"id":"zither","name":"古琴雅苑","en":"Zither Garden (QRE Plaza)","cats":["聚餐"],"cuisines":"北京烤鸭 / 上海菜","cui":["江浙沪菜"],"price":"HK$200–300","hours":"每日 11:45–22:00","address":"湾仔皇后大道东202号QRE Plaza 19楼","mtr":"湾仔站A3出口步行约8分钟","phone":"6993 1025","dishes":["北京填鸭","黑醋骨","无锡骨","小笼包"],"tags":["片皮鸭","上海菜","高层景观"],"private_room":true,"images":["images/zither-1.jpg","images/zither-2.jpg"],"intro":"湾仔高楼上的京沪菜馆，即席片鸭仪式感十足，适合同事围桌聚餐。","tips":"片皮鸭即席堂片，建议提前订位并预订鸭子；高层景观位靠窗更佳，人多可点全鸭两吃。","lat":22.274981,"lng":114.172212},{"id":"sunmingkee","name":"新明记肥牛猪骨煲","en":"Sun Ming Kee Pork Bone Pot","cats":["聚餐"],"cuisines":"港式火锅 / 猪骨煲","cui":["火锅·鸡煲"],"price":"HK$200–400","hours":"每日 17:30–01:00（需提前预约）","address":"佐敦炮台街2-8号地下","mtr":"佐敦站A出口步行约8分钟","phone":"3188 0286","dishes":["招牌肥牛猪骨煲","手切肥牛","炸鱼皮","响铃"],"tags":["猪骨煲","需预约","佐敦人气"],"private_room":false,"images":["images/sunmingkee-1.jpg","images/sunmingkee-2.jpg"],"intro":"以浓郁猪骨汤底闻名的佐敦火锅店，肥牛猪骨煲需提前预约，晚市一座难求。","tips":"必须提前预约，现场等位很难；招牌肥牛猪骨煲汤浓，先喝汤再涮肉，晚市17:30开。","lat":22.3046,"lng":114.1685},{"id":"fongwingkee","name":"方荣记沙嗲牛肉专家","en":"Fong Wing Kee Satay Beef Specialist","cats":["聚餐"],"cuisines":"港式火锅 / 沙嗲牛肉","cui":["火锅·鸡煲"],"price":"HK$200–300","hours":"每日 11:30–00:00","address":"九龙城侯王道85-87号地下","mtr":"宋皇台站B2出口步行约10分钟","phone":"2382 1788","dishes":["招牌沙嗲牛肉火锅","手切牛肉","沙嗲汤底","公仔面"],"tags":["沙嗲火锅始祖","九龙城地胆","排队热门"],"private_room":false,"images":["images/fongwingkee-1.jpg","images/fongwingkee-2.jpg"],"intro":"沙嗲牛肉火锅的殿堂级老店，汤底香浓惹味，是九龙城必吃名物。","tips":"沙嗲火锅殿堂级老店，建议开门前就到；最后加公仔面吸满沙嗲汤是经典吃法。","lat":22.329784,"lng":114.188781},{"id":"mulan","name":"MULAN 沐澜","en":"MULAN (Harbour City)","cats":["聚餐"],"cuisines":"新派中菜 / 中菜西造","cui":["粤菜"],"price":"HK$300–500","hours":"周一至五 12:00–15:00 / 18:00–22:30；周六日 12:00–15:30 / 18:00–22:30","address":"尖沙咀广东道3-27号海港城海运大厦3楼OTE303号铺","mtr":"尖沙咀站A1出口步行约10分钟","phone":"3751 3009","dishes":["晚市omakase","招牌黑松露菜式","创意粤菜","精致甜品"],"tags":["黑珍珠二钻主厨","维港海景","中菜西造"],"private_room":false,"images":["images/mulan-1.jpg","images/mulan-2.jpg"],"intro":"由黑珍珠二钻女行政总厨主理的新派中菜，正对维港海景，摆盘精致。","tips":"黑珍珠二钻主厨新派中菜，晚市omakase建议提前订位；海景位正对维港，晚市氛围最好。","lat":22.2945,"lng":114.168},{"id":"suki","name":"寿喜·关西","en":"Suki Kansai (Causeway Bay)","cats":["聚餐"],"cuisines":"日式寿喜烧","cui":["日料"],"price":"HK$168–350","hours":"每日 12:00–22:00","address":"铜锣湾耀华街16号地铺","mtr":"铜锣湾站A出口步行约4分钟","phone":"2422 5428","dishes":["A4和牛寿喜烧套餐","极上肉眼寿喜烧","兰王蛋配饭","野菜拼盘"],"tags":["关西风寿喜烧","A4和牛","高性价比"],"private_room":false,"images":["images/suki-1.jpg","images/suki-2.jpg"],"intro":"主打正宗关西风寿喜烧，北海道A4+和牛亲民价，先煎后煮焦香十足。","tips":"A4和牛寿喜烧性价比高，午市套餐更抵；兰王蛋拌饭必点；座位不多建议订位。","lat":22.277498,"lng":114.181948},{"id":"hiroiroha","name":"肉料理 广 x 伊吕波烧肉","en":"Meat Cuisine Hiro x Iroha Yakiniku","cats":["聚餐"],"cuisines":"日式烧肉 / 飞驒牛","cui":["日料"],"price":"HK$400–500","hours":"每日 12:00–15:00 / 18:00–23:00","address":"铜锣湾渣甸街50号渣甸中心2楼","mtr":"铜锣湾站F1出口步行约4分钟","phone":"2882 9877","dishes":["A5飞驒牛盛合","厚切牛舌","和牛西冷","烧肉怀石套餐"],"tags":["飞驒牛","日式烧肉","2006年开业"],"private_room":true,"images":["images/hiroiroha-1.jpg","images/hiroiroha-2.jpg"],"intro":"以飞驒牛闻名的日式烧肉店，稀有部位与怀石烧肉套餐是招牌。","tips":"飞驒牛盛合适合2-3人分食，厚切牛舌是隐藏招牌；晚市建议订位。","lat":22.28051,"lng":114.18544},{"id":"zengwei","name":"增辉艺厨","en":"Glorious Cuisine","cats":["聚餐"],"cuisines":"粤式小炒 / 大排档","cui":["粤菜"],"price":"HK$200–300","hours":"每日 18:00–03:00","address":"深水埗石硖尾街31-33号地下","mtr":"深水埗站B2出口步行约5分钟","phone":"2778 8103","dishes":["避风塘炒蟹","椒盐九肚鱼","砵仔焗鱼肠","生炒骨"],"tags":["米其林推荐","大排档","宵夜名店"],"private_room":false,"images":["images/zengwei-1.jpg","images/zengwei-2.jpg"],"intro":"获米其林推荐的大排档菜馆，镬气十足，深宵时段仍座无虚席。","tips":"大排档宵夜名店18:00开市，避风塘炒蟹镬气足；19:30后高峰要等位，想早吃建议开门就到。","lat":22.329794,"lng":114.164974},{"id":"xianwei","name":"鲜味蒸滚锅","en":"Xian Wei Steam Hotpot (Sai Ying Pun)","cats":["聚餐"],"cuisines":"蒸海鲜火锅 / 放题","cui":["火锅·鸡煲"],"price":"HK$250–350","hours":"每日 11:00–03:00","address":"西环皇后大道西409号怡景花园地铺","mtr":"西营盘站B2出口步行约8分钟","phone":"2151 3523","dishes":["蒸海鲜放题","鸡煲","粥底火锅","任饮任食"],"tags":["蒸汽海鲜","放题","深夜营业"],"private_room":false,"images":["images/xianwei-1.jpg","images/xianwei-2.jpg"],"intro":"蒸汽海鲜配火锅放题，海鲜蒸完精华流进粥底，人气旺场适合大班人聚餐。","tips":"蒸汽海鲜放题人多更划算；海鲜蒸完精华流进粥底，记得留肚喝粥；营业到凌晨3点。","lat":22.286548,"lng":114.138763},{"id":"hunan","name":"湘舍壹号","en":"The Hunan House (Wan Chai)","cats":["聚餐"],"cuisines":"湘菜 / 湖南菜","cui":["湘菜"],"price":"HK$150–250","hours":"每日 11:30–23:00","address":"湾仔骆克道57-73号华美粤海酒店1楼","mtr":"湾仔站A1出口步行约6分钟","phone":"3580 8288","dishes":["清炖湘舍甲鱼","农家小炒肉","组庵豆腐","桂花米糕"],"tags":["高级湘菜","私人包厢","酒店内"],"private_room":true,"images":["images/hunan-1.jpg","images/hunan-2.jpg"],"intro":"湾仔酒店内的高端湘菜馆，黑色主调装修时尚，商务午餐与宴客皆宜。","tips":"高端湘菜辣度可调，不吃辣提前说明；设有包厢，商务午餐与宴客皆宜。","lat":22.2788,"lng":114.1742},{"id":"shanghaiplus","name":"尚海薈","en":"Shanghai Plus (Shui On Centre)","cats":["聚餐"],"cuisines":"沪菜 / 江浙菜","cui":["江浙沪菜","粤菜"],"price":"HK$200–300","hours":"每日 11:30–22:00","address":"湾仔港湾道6-8号瑞安中心2楼201号铺","mtr":"会展站A1出口步行约5分钟","phone":"2886 2818","dishes":["远年陈皮意大利黑醋骨","脆皮乳鸽伴鸽蛋","鲍汁关东辽参葱油拌面","沪式点心"],"tags":["沪粤融合","梁志天设计","商务聚餐"],"private_room":true,"images":["images/shanghaiplus-1.jpg","images/shanghaiplus-2.jpg"],"intro":"由梁志天设计集团打造的现代上海食府，沪菜浓油重酱遇上粤菜清鲜。","tips":"沪粤融合，远年陈皮意大利黑醋骨是招牌；瑞安中心二楼会展步行可达，午餐人均更划算。","lat":22.280177,"lng":114.171491},{"id":"mian","name":"红棉","en":"MIAN (The Murray)","cats":["商务宴请"],"cuisines":"粤菜 / 创意中餐","cui":["粤菜"],"price":"HK$700–1000","hours":"周一至五 12:00–16:00 / 18:00–22:30；周六日及假日 11:00–16:00 / 18:00–22:30","address":"中环红棉路22号美利酒店平台亭楼","mtr":"金钟站C1出口步行约8分钟","phone":"3563 6405","dishes":["红棉葱油脆皮鸡","有机番茄黑豚猪排焗饭","精选点心","时令粤菜"],"tags":["米其林名厨","玻璃亭楼","酒店中菜"],"private_room":true,"images":["images/mian-1.jpg","images/mian-2.jpg"],"intro":"美利酒店内的玻璃亭楼中菜馆，名厨邵德龙主理，采光充足，宴客体面。","tips":"玻璃亭楼采光极好，建议订位并要求窗边；米其林名厨主理，午市点心同样精致。","lat":22.277,"lng":114.1603},{"id":"goldenleaf","name":"金叶庭","en":"Golden Leaf (Conrad Hong Kong)","cats":["商务宴请"],"cuisines":"粤菜 / 高级中餐","cui":["粤菜"],"price":"HK$700–1000","hours":"每日 11:30–15:00 / 18:00–23:00","address":"金钟金钟道88号太古广场港丽酒店大堂低座","mtr":"金钟站F出口直达太古广场","phone":"2521 3838","dishes":["金叶庭炒饭","焗酿鲜蟹盖","竹笙菜胆炖花胶汤","金牌吊炸鸡"],"tags":["米其林一星","三间贵宾房","港丽酒店"],"private_room":true,"images":["images/goldenleaf-1.jpg","images/goldenleaf-2.jpg"],"intro":"港丽酒店的米其林一星粤菜府，柚木装潢典雅，三间贵宾房适合正式宴请。","tips":"米其林一星，三间贵宾房需提前订；招牌金叶庭炒饭值得一试，商务宴请订房更稳。","lat":22.27681,"lng":114.165275},{"id":"gardenlounge","name":"Garden Lounge","en":"Garden Lounge (The Murray)","cats":["商务宴请"],"cuisines":"中菜 / 国际料理","cui":["西餐","粤菜"],"price":"HK$500–800","hours":"每日 12:00–22:00（下午茶及晚市套餐，详情以酒店为准）","address":"中环红棉路22号美利酒店UG花园楼层","mtr":"金钟站C1出口步行约8分钟","phone":"3141 8888","dishes":["招牌下午茶三层架","海鲜半自助晚餐","威灵顿三文鱼","商务午餐套餐"],"tags":["美利酒店","圣约翰座堂景观","私人宴会"],"private_room":true,"images":["images/gardenlounge-1.jpg","images/gardenlounge-2.jpg"],"intro":"美利酒店花园楼层的优雅餐厅，落地玻璃正对圣约翰座堂，可安排私人宴会。","tips":"下午茶三层架人气高建议提前订位；圣约翰座堂景观位适合拍照；商务午餐套餐更实惠。","lat":22.277,"lng":114.1603},{"id":"lawrys","name":"Lawry's The Prime Rib","en":"Lawry's The Prime Rib","cats":["商务宴请"],"cuisines":"美式牛排 / 西餐","cui":["西餐"],"price":"HK$500–800","hours":"周一至五 11:30–15:00 / 18:00–23:00；周六日 11:00–15:00 / 18:00–23:00","address":"中环皇后大道中9号嘉轩广场3楼","mtr":"中环站K出口步行约4分钟","phone":"2907 2218","dishes":["Prime Rib 烧牛肉","冰旋翡翠沙律","龙虾浓汤","约克郡布丁"],"tags":["1938年传统","银餐车堂切","贵宾室"],"private_room":true,"images":["images/lawrys-1.jpg","images/lawrys-2.jpg"],"intro":"源自芝加哥的传统美式扒房，银色餐车堂切Prime Rib仪式感十足，设贵宾室。","tips":"银色餐车堂切Prime Rib仪式感强，晚餐建议订位；约克郡布丁配烧牛肉汁是经典搭配。","lat":22.280493,"lng":114.15842},{"id":"chiutang","name":"潮厅","en":"Chiu Tang (The Galleria)","cats":["商务宴请"],"cuisines":"潮州菜 / 高级中餐","cui":["潮州菜"],"price":"HK$500–800","hours":"每日 12:00–15:00 / 18:00–22:00","address":"中环皇后大道中9号嘉轩广场2楼The Galleria 222号铺","mtr":"中环站K出口步行约4分钟","phone":"2526 8798","dishes":["潮州大冻蟹","堂灼响螺片","糖醋双面王","反沙芋头条"],"tags":["怀旧港风装潢","正宗潮州菜","丽新饮食"],"private_room":true,"images":["images/chiutang-1.jpg","images/chiutang-2.jpg"],"intro":"丽新饮食旗下高级潮州菜馆，怀旧老香港装潢，冻蟹与响螺皆是招牌。","tips":"潮州冻蟹与堂灼响螺是招牌，建议提前预订；怀旧港风装潢适合拍照，商务宴请订房更稳。","lat":22.280493,"lng":114.15842},{"id":"newpunjab","name":"New Punjab Club","en":"New Punjab Club","cats":["商务宴请"],"cuisines":"印度菜 / 旁遮普料理","cui":["印度菜"],"price":"HK$400–600","hours":"每日 12:00–14:30 / 18:00–22:30","address":"中环云咸街34号世界商业大厦地下","mtr":"中环站D1出口步行约5分钟","phone":"2368 1223","dishes":["泥窑烤鹿肉","龙虾咖喱","Tandoori 羊肉","印度烤饼"],"tags":["米其林一星","旁遮普风味","复古装潢"],"private_room":true,"images":["images/newpunjab-1.jpg","images/newpunjab-2.jpg"],"intro":"连续多年获米其林一星的旁遮普餐厅，泥窑烧烤与咖喱俱佳，商务饭局有格调。","tips":"米其林一星晚市建议订位；泥窑烤鹿肉限量供应，咖喱配印度烤饼是稳妥之选。","lat":22.279956,"lng":114.155179},{"id":"carrianna","name":"佳宁娜潮州菜","en":"Carrianna Chiu Chow Restaurant","cats":["商务宴请"],"cuisines":"潮州菜 / 粤菜","cui":["潮州菜"],"price":"HK$201–400","hours":"每日 11:00–23:00","address":"湾仔告士打道151号资本中心1楼","mtr":"湾仔站A1出口步行约8分钟","phone":"2511 1282","dishes":["卤水鹅片","蚝仔烙","潮州冻蟹","普宁豆腐"],"tags":["老字号潮州菜","大型圆桌","宴客酒席"],"private_room":true,"images":["images/carrianna-1.jpg","images/carrianna-2.jpg"],"intro":"老字号潮州酒楼，经典潮菜与大型圆桌齐备，适合商务宴请与围餐。","tips":"老字号潮州酒楼大型圆桌适合围餐；卤水鹅片与蚝仔烙是经典，宴客可提前订房。","lat":22.279524,"lng":114.177296},{"id":"dynasty","name":"福满楼","en":"Dynasty Restaurant (Renaissance Harbour View)","cats":["商务宴请"],"cuisines":"粤菜 / 高级中餐","cui":["粤菜"],"price":"HK$401–800","hours":"周一至六 12:00–15:00 / 18:00–22:00；周日 11:30–15:00 / 18:00–22:00","address":"湾仔港湾道1号万丽海景酒店3楼","mtr":"会展站A1出口步行约4分钟","phone":"2584 6972","dishes":["风味金榜开边龙虾","台山焗酿豆腐","蛋白杏仁茶","精致点心"],"tags":["米其林餐厅","维港海景","八间私人厢房"],"private_room":true,"images":["images/dynasty-1.jpg","images/dynasty-2.jpg"],"intro":"万丽海景酒店内屡获殊荣的粤菜餐厅，西关大宅设计，八间厢房正对维港。","tips":"八间厢房正对维港，需提前订房；周末点心同样精致；商务宴请推荐招牌风味金榜龙虾。","lat":22.2825,"lng":114.1755},{"id":"hautak","name":"厚德饭店","en":"Hau Tak Restaurant","cats":["商务宴请"],"cuisines":"粤菜 / 古法手工菜","cui":["粤菜"],"price":"HK$401–800","hours":"每日 11:30–14:30 / 18:00–23:00","address":"铜锣湾骆克道454-456号地铺","mtr":"铜锣湾站D1出口步行约4分钟","phone":"2335 5328","dishes":["蜜餞叉燒皇","雞子戈渣","蟹肉蛋白琵琶燕","富貴鮑魚酥"],"tags":["米其林指南","福临门班底","四间厢房","失传古法粤菜"],"private_room":true,"images":["images/hautak-1.jpg","images/hautak-2.jpg"],"intro":"福临门班底主理的古法粤菜馆，重现鸡子戈渣等失传名菜，木系装潢典雅，四间厢房适合商务宴请。","tips":"四间厢房需提前订；失传古法粤菜建议试鸡子戈渣；晚市分时段，订位时确认好时间。","lat":22.28035,"lng":114.1821},{"id":"jibaohuang","name":"鸡煲皇","en":"Chicken King (Hung Hom)","cats":["聚餐"],"cuisines":"港式鸡煲 / 火锅","cui":["火锅·鸡煲"],"price":"HK$100–250","hours":"每日 17:30–01:00（建议致电确认）","address":"红磡芜湖街123号地下A铺（海德豪苑）","mtr":"红磡站B1出口步行约9分钟","phone":"2773 0266","dishes":["招牌鸡煲（清远鸡）","蒜泥黑柏叶","手切牛肉","虾多士"],"tags":["红磡街坊名店","宵夜开到凌晨","清远鸡"],"private_room":false,"images":["images/jibaohuang-1.jpg","images/jibaohuang-2.jpg"],"intro":"红磡街坊鸡煲名店，清远鸡煲肉嫩入味，吃完打边炉配手切牛肉，宵夜开到凌晨。","tips":"晚市17:30开、宵夜到凌晨1点；招牌鸡煲吃完加汤打边炉；去前建议先电话确认当天营业时间。","lat":22.3075,"lng":114.1852},{"id":"joyhing","name":"再兴烧腊","en":"Joy Hing Roasted Meat","cats":["便餐"],"cuisines":"粤式烧腊 / 快餐","cui":["粤菜"],"price":"HK$50–100","hours":"周一至六 09:30–22:00；周日及公众假期休息","address":"湾仔轩尼诗道265-267号地下C座","mtr":"湾仔站A2出口步行约6分钟","phone":"2519 6639","dishes":["招牌蜜汁叉烧","三宝饭（叉烧·油鸡·烧鹅）","脆皮烧肉","烧鸭"],"tags":["米其林必比登","百年烧腊老店","CNN推荐","招牌叉烧"],"private_room":false,"images":["images/joyhing-1.jpg","images/joyhing-2.jpg"],"intro":"光绪末年开业的百年烧腊名店，厚切蜜汁叉烧与脆皮烧肉驰名，米其林必比登推介，午餐快而稳。","tips":"招牌叉烧和脆皮乳猪容易卖完，想试建议午市11:30前到；叉烧饭配例汤是经典吃法，周日休息别白跑。","lat":22.2779,"lng":114.1765},{"id":"shangman","name":"尚文潮州菜","en":"Man's Chiuchow Cuisine","cats":["聚餐"],"cuisines":"潮州菜 / 传统手工菜","cui":["潮州菜"],"price":"HK$201–400","hours":"每日 11:30–15:00 / 17:45–23:00","address":"湾仔卢押道23号The Phoenix 2楼","mtr":"湾仔站C出口步行约3分钟","phone":"2890 2968","dishes":["招牌红烧翅","卤水鹅片鹅肠","勇哥传统炒蚝爽","炸双枣（虾枣蟹枣）"],"tags":["上环尚兴班底","传统古典装潢","潮州手工菜","商务聚餐皆宜"],"private_room":false,"images":["images/shangman-1.jpg","images/shangman-2.jpg"],"intro":"上环老字号尚兴潮州菜班底主理的中高档潮州菜馆，传统古典装潢，卤水与手工菜式精致。","tips":"晚市19:00后座无虚席建议订位；招牌红烧翅和卤水鹅片可提前留；炒蚝爽用生菜包着吃是地道吃法。","lat":22.27875,"lng":114.17151},{"id":"zhuoyuan","name":"卓苑","en":"Zhuoyuan Restaurant (H Zentre)","cats":["商务宴请"],"cuisines":"粤菜 / 潮州菜","cui":["粤菜","潮州菜"],"price":"HK$401–800","hours":"每日 11:30–23:00","address":"尖沙咀中间道15号H Zentre 16楼全层","mtr":"尖沙咀/尖东站L1出口步行约1分钟","phone":"2810 0288","dishes":["豆酥龙虾","卤水吊桶仔","金鱼饺","带子松露肠粉"],"tags":["无懈维港景","豪华包厢","新派精致粤菜","中式元素装潢"],"private_room":true,"images":["images/zhuoyuan-1.jpg","images/zhuoyuan-2.jpg"],"intro":"H Zentre 16楼的高端海景中菜厅，主打新派精致粤菜与潮州菜，中式元素装潢，豪华包厢带露台景观。","tips":"维港景位抢手，建议提前订位并注明靠窗；豪华包厢适合商务宴请需提前预订；豆酥龙虾是人气菜式，多人聚餐记得预留。","lat":22.2953974,"lng":114.1733859},{"id":"haiganghui","name":"海港荟（海港中心店）","en":"Victoria Harbour Supreme (Harbour Centre)","cats":["聚餐"],"cuisines":"粤菜 / 海鲜酒家","cui":["粤菜"],"price":"HK$101–200","hours":"每日 10:00–22:30","address":"湾仔港湾道25号海港中心地下G3铺及3楼","mtr":"会展站A3出口步行约3分钟","phone":"3577 8688","dishes":["招牌烧鹅皇","清蒸阿拉斯加长脚蟹","鲍鱼鹅掌","龙虾伊面"],"tags":["海港饮食集团","高级海鲜酒家","贵宾房","婚宴场地"],"private_room":true,"images":["images/haiganghui-1.jpg","images/haiganghui-2.jpg"],"intro":"海港饮食集团旗下高级粤菜海鲜酒家，招牌烧鹅皇与阿拉斯加长脚蟹驰名，设贵宾房与婚宴大场地。","tips":"就在公司旁边，午市点心抵食；贵宾房和宴席场地建议提前订；招牌烧鹅皇每日限量，想吃早点下单。","lat":22.2810788,"lng":114.1755947},{"id":"picanhas","name":"Picanhas'","en":"Picanhas' (Soho)","cats":["聚餐"],"cuisines":"阿根廷烤肉 / 西餐","cui":["西餐"],"price":"HK$100–300","hours":"周一至四及日 11:30–22:00；周五六 11:30–22:30","address":"中环伊利近街27及29号地下","mtr":"上环站A2出口步行约8分钟","phone":"5348 0985","dishes":["招牌 Picanha 牛臀盖","M9 和牛扒","Chimichurri 阿根廷青酱烤鸡","Flat Iron 牛扒"],"tags":["阿根廷扒房","炭火烤肉","苏豪人气","逢周三任食烤肉"],"private_room":false,"images":["images/picanhas-1.jpg","images/picanhas-2.jpg"],"intro":"中环苏豪人气阿根廷扒房，招牌 Picanha 牛臀盖炭火烤至焦香，M9和牛与阿根廷青酱都是必试。","tips":"周三晚市有$298任食炭火巴西烤肉，性价比极高但建议早订位；午市套餐$158起更抵；牛扒建议提前说明熟度。","lat":22.281903,"lng":114.152213},{"id":"yongfu","name":"甬府","en":"Yong Fu (Hong Kong)","cats":["商务宴请"],"cuisines":"宁波菜 / 江浙菜","cui":["江浙沪菜"],"price":"HK$800–1500","hours":"每日 12:00–15:00 / 18:00–23:30","address":"湾仔骆克道20-24号金星大厦地下2号铺及1楼","mtr":"湾仔站A1出口步行约5分钟","phone":"2881 7899","dishes":["招牌十八斩（梭子蟹）","沙蒜豆面","脆皮水潺","宁波汤圆"],"tags":["米其林一星","黑珍珠一钻","宁波菜","楼上厢房"],"private_room":true,"images":["images/yongfu-1.jpg","images/yongfu-2.jpg"],"intro":"与上海总店同源的米其林一星宁波菜，舟山海鲜与古法宁波菜精细呈现，高雅中式装潢配楼上厢房。","tips":"楼上厢房需提前订（无电梯，要行楼梯）；午市套餐每位$498起最抵；招牌十八斩和沙蒜豆面建议提前预订。","lat":22.2781633,"lng":114.1699761},{"id":"haohao","name":"好好肥牛鸡煲","en":"Ho Ho Beef & Chicken Pot","cats":["聚餐"],"cuisines":"粤式火锅 / 鸡煲","cui":["火锅·鸡煲","粤菜"],"price":"HK$201–400","hours":"每日 18:00–02:00","address":"九龙庙街286-298号华志大厦地下D及E号铺","mtr":"佐敦站A出口步行约7分钟","phone":"2770 4468","dishes":["极品手切本地新鲜肥牛","北海道清酒爆炸蚬窝","杏汁白肺菜胆窝","自家制丸及饺子"],"tags":["佐敦宵夜名店","庙街夜市","手切本地肥牛","深夜营业"],"private_room":false,"images":["images/haohao-1.jpg","images/haohao-2.jpg"],"intro":"佐敦庙街人气火锅鸡煲店，主打极品手切本地新鲜肥牛，汤底与自家制丸饺都有口碑，越夜越旺。","tips":"晚市18:00开、营业到凌晨2点，庙街宵夜好去处；手切本地肥牛拼盘约$298，人多必点；建议提前订位。","lat":22.30423,"lng":114.16969}]};
+const $ = (s, el=document) => el.querySelector(s);
+const $$ = (s, el=document) => Array.from(el.querySelectorAll(s));
+
+const CATS = ["便餐", "聚餐", "商务宴请"];
+const CUIS = ["全部", "粤菜", "潮州菜", "川菜", "湘菜", "江浙沪菜", "日料", "东南亚菜", "印度菜", "西餐", "火锅·鸡煲", "茶餐厅·冰室", "其他"];
+const state = {cat:"全部", cui:"全部", q:"", sort:"default", loc:null, locLabel:""};
+
+function inCat(r){ return state.cat === "全部" || r.cats.includes(state.cat); }
+function inCui(r){ return state.cui === "全部" || (r.cui||[]).includes(state.cui); }
+
+// ---- 评分持久化：本机多级存储（localStorage → sessionStorage → Cookie）+ 云端同步 ----
+const RATE_KEY = "dg_ratings_v2";
+const PANTRY_KEY = "dg_pantry_id";
+const PANTRY_BASKET = "dg_ratings";
+const PANTRY_ID = "e3b275ca-78d9-462a-95b3-8e85e4fb7cba"; // 云端同步桶 ID（getpantry.cloud）
+const CLOUD_TTL = 10*60*1000;
+let localRatings = {};
+let storageMode = "none";
+let savedPantryId = "";
+
+function readKey(k){
+  try{ const v = localStorage.getItem(k); if(v != null) return v; }catch(e){}
+  try{ const v = sessionStorage.getItem(k); if(v != null) return v; }catch(e){}
+  try{
+    const m = document.cookie.match(new RegExp("(?:^|; )"+k.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")+"=([^;]*)"));
+    if(m && m[1]) return decodeURIComponent(m[1]);
+  }catch(e){}
+  return null;
+}
+function writeKey(k, v){
+  try{ localStorage.setItem(k, v); return "localStorage"; }catch(e){}
+  try{ sessionStorage.setItem(k, v); return "sessionStorage"; }catch(e){}
+  try{
+    document.cookie = k+"="+encodeURIComponent(v)+"; path=/; max-age=31536000; SameSite=Lax";
+    const m = document.cookie.match(new RegExp("(?:^|; )"+k.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")+"=([^;]*)"));
+    if(m && m[1]) return "cookie";
+  }catch(e){}
+  return "none";
+}
+
+try{ savedPantryId = readKey(PANTRY_KEY) || ""; }catch(e){ savedPantryId = ""; }
+function pantryId(){ return (savedPantryId || PANTRY_ID).trim(); }
+let cloudOn = !!pantryId();
+
+function updateRateHint(){
+  const el = $("#rateStorageHint");
+  if(!el) return;
+  if(cloudOn) el.textContent = "✓ 已开启云端同步：评分在所有浏览器/设备同步，刷新不丢失。";
+  else if(storageMode === "localStorage") el.textContent = "✓ 评分已自动保存到本浏览器，刷新不会丢失。";
+  else if(storageMode === "sessionStorage") el.textContent = "✓ 已保存在本标签页（浏览器限制）：刷新不丢，关闭标签页会清空。";
+  else if(storageMode === "cookie") el.textContent = "✓ 评分已保存在本浏览器 Cookie，刷新不会丢失。";
+  else el.textContent = "⚠ 当前浏览器禁止保存数据，评分仅在本次会话有效，建议改用 Chrome 或 Safari 打开。";
+  const st = $("#pantryStatus");
+  if(st) st.textContent = cloudOn ? "已开启" : "未开启";
+}
+
+function saveRatings(){
+  try{
+    const v = JSON.stringify(localRatings);
+    storageMode = writeKey(RATE_KEY, v);
+  }catch(e){}
+  updateRateHint();
+  if(cloudOn) queueCloudSave();
+}
+
+async function cloudLoad(){
+  const id = pantryId();
+  if(!id) return null;
+  const cacheKey = "dg_cloud_cache_"+id;
+  try{
+    const raw = readKey(cacheKey);
+    if(raw){
+      const c = JSON.parse(raw);
+      if(c && c.t && Date.now() - c.t < CLOUD_TTL) return (c.d && typeof c.d === "object") ? c.d : null;
+    }
+  }catch(e){}
+  try{
+    const r = await fetch("https://getpantry.cloud/apiv1/pantry/"+id+"/basket/"+PANTRY_BASKET, {headers:{Accept:"application/json"}});
+    if(!r.ok) return null;
+    const d = await r.json();
+    if(d && typeof d === "object"){
+      try{ writeKey(cacheKey, JSON.stringify({t: Date.now(), d})); }catch(e){}
+      return d;
+    }
+  }catch(e){ return null; }
+  return null;
+}
+let cloudSaveTimer = null;
+function queueCloudSave(){
+  clearTimeout(cloudSaveTimer);
+  cloudSaveTimer = setTimeout(()=>cloudSave(localRatings), 1200);
+}
+async function cloudSave(obj){
+  const id = pantryId();
+  if(!id) return;
+  try{
+    const r = await fetch("https://getpantry.cloud/apiv1/pantry/"+id+"/basket/"+PANTRY_BASKET, {
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body: JSON.stringify(obj)
+    });
+    if(!r.ok) showToast("云端同步失败，评分已保存在本机");
+  }catch(e){ showToast("云端同步失败，评分已保存在本机"); }
+}
+
+try{
+  localRatings = JSON.parse(readKey(RATE_KEY) || "{}") || {};
+  storageMode = writeKey(RATE_KEY, JSON.stringify(localRatings));
+}catch(e){ localRatings = {}; }
+
+function ratingOf(r){
+  const v = localRatings[r.id] ?? r.rating ?? 0;
+  return Math.max(0, Math.min(5, Math.round(v)));
+}
+
+function bellsHTML(n, size){
+  let s = "";
+  for(let i=0;i<n;i++) s += `<img src="images/bell.png" alt="铃铛" style="width:${size}px;height:${size}px;">`;
+  return s;
+}
+
+function distKm(aLat, aLng, bLat, bLng){
+  const R = 6371, rad = x => x*Math.PI/180;
+  const dLat = rad(bLat-aLat), dLng = rad(bLng-aLng);
+  const h = Math.sin(dLat/2)**2 + Math.cos(rad(aLat))*Math.cos(rad(bLat))*Math.sin(dLng/2)**2;
+  return 2*R*Math.asin(Math.sqrt(h));
+}
+
+function fmtDist(km){
+  if(km < 1) return `${Math.round(km*1000)} 米`;
+  return `${km.toFixed(1)} 公里`;
+}
+
+function showToast(msg){
+  const t = $("#toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(showToast._t);
+  showToast._t = setTimeout(()=>t.classList.remove("show"), 3200);
+}
+
+async function geocodeAddr(q){
+  const tries = [q, `${q} 香港`, `${q} Hong Kong`];
+  for(const t of tries){
+    try{
+      const url = "https://nominatim.openstreetmap.org/search?format=json&limit=1&q=" + encodeURIComponent(t);
+      const res = await fetch(url, {headers:{Accept:"application/json"}});
+      if(!res.ok) continue;
+      const d = await res.json();
+      if(d && d[0]) return {lat:+d[0].lat, lng:+d[0].lon, label:d[0].display_name.split(",")[0]};
+    }catch(e){}
+  }
+  return null;
+}
+
+function setLocation(lat, lng, label, quiet){
+  state.loc = {lat, lng};
+  state.locLabel = label || "";
+  $$(".qloc").forEach(b=>b.classList.toggle("on", b.dataset.label===label || b.textContent===label));
+  if(state.sort === "default") state.sort = "nearest";
+  $("#sortSel").value = state.sort;
+  render();
+  if(!quiet) showToast(`已定位：${label || "当前位置"}，按距离重新排序`);
+}
+
+function locResult(r){
+  if(!state.loc || !r.lat || !r.lng) return null;
+  return distKm(state.loc.lat, state.loc.lng, r.lat, r.lng);
+}
+
+function icon(name, size=15){
+  const p = {
+    clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+    pin:'<path d="M12 21s-7-5.5-7-11a7 7 0 0 1 14 0c0 5.5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/>',
+    phone:'<path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.7A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 2 .7 2.8a2 2 0 0 1-.4 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.9.5 2.8.7a2 2 0 0 1 1.7 2z"/>',
+    nav:'<path d="M3 11l19-8-8 19-2.5-8.5z"/>',
+    subway:'<rect x="4" y="3" width="16" height="14" rx="4"/><path d="M4 10h16"/><circle cx="8.5" cy="13.5" r="1"/><circle cx="15.5" cy="13.5" r="1"/><path d="M8 21l2-4M16 21l-2-4"/>',
+    yuan:'<path d="M12 3v18"/><path d="M5 8h14"/><path d="M5 12h14"/><path d="M8 8l4 6 4-6"/>',
+    star:'<path d="M12 2.5l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5-5.8-3-5.8 3 1.1-6.5L2.6 9.3l6.5-.9z"/>',
+    users:'<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"/>',
+    award:'<circle cx="12" cy="9" r="6"/><path d="M8.5 14.5L7 22l5-3 5 3-1.5-7.5"/>',
+    sea:'<path d="M2 16c1.5 0 1.5 1.5 3 1.5S6.5 16 8 16s1.5 1.5 3 1.5 1.5-1.5 3-1.5 1.5 1.5 3 1.5 1.5-1.5 3-1.5 1.5 1.5 3 1.5"/><path d="M2 20c1.5 0 1.5 1.5 3 1.5S6.5 20 8 20s1.5 1.5 3 1.5 1.5-1.5 3-1.5 1.5 1.5 3 1.5 1.5-1.5 3-1.5 1.5 1.5 3 1.5"/>',
+    building:'<path d="M3 21h18"/><path d="M5 21V5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v16"/><path d="M15 9h4a1 1 0 0 1 1 1v11"/><path d="M9 7h2M9 11h2M9 15h2"/>',
+    dice:'<rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="8.5" cy="8.5" r="1.2" fill="currentColor" stroke="none"/><circle cx="15.5" cy="15.5" r="1.2" fill="currentColor" stroke="none"/><circle cx="15.5" cy="8.5" r="1.2" fill="currentColor" stroke="none"/><circle cx="8.5" cy="15.5" r="1.2" fill="currentColor" stroke="none"/>',
+    tag:'<path d="M20.6 13.4L11 3.8A2 2 0 0 0 9.6 3H4a1 1 0 0 0-1 1v5.6c0 .5.2 1 .6 1.4l9.6 9.6a2 2 0 0 0 2.8 0l4.6-4.6a2 2 0 0 0 0-2.8z"/><circle cx="7.5" cy="7.5" r="1.2" fill="currentColor" stroke="none"/>',
+  };
+  return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${p[name]||p.star}</svg>`;
+}
+
+function badges(r){
+  let b = [];
+  if(r.tags.some(t=>/米其林|米芝蓮/.test(t))) b.push(`<span class="b michelin">米其林</span>`);
+  if(r.private_room) b.push(`<span class="b room">有包厢</span>`);
+  if(r.tags.some(t=>/海景/.test(t))) b.push(`<span class="b sea">海景</span>`);
+  if(r.tags.some(t=>/大厦内/.test(t))) b.push(`<span class="b building">大厦内</span>`);
+  if(r.tags.some(t=>/排队/.test(t))) b.push(`<span class="b hot">热门</span>`);
+  return b.join("");
+}
+
+function cuisineBadge(r){
+  const first = r.cuisines.split("/")[0].trim();
+  return `<span class="b cuisine" style="position:absolute; top:10px; right:10px;">${first}</span>`;
+}
+
+function phoneHref(p){ return "tel:+852" + p.replace(/[^0-9]/g,""); }
+function gmaps(r){ return "https://www.google.com/maps/dir/?api=1&destination=" + encodeURIComponent(r.name + " " + r.address); }
+function amaps(r){ return "https://maps.apple.com/?daddr=" + encodeURIComponent(r.name + " " + r.address) + "&dirflg=w"; }
+function priceLow(r){ const m = r.price.match(/HK\$(\d+)/); return m ? +m[1] : 99999; }
+
+function imgRow(r){
+  if(r.images.length === 1){
+    return `<img src="${r.images[0]}" alt="${r.name} 环境图" loading="lazy">`;
+  }
+  let dots = r.images.map((_,i)=>`<button class="dot ${i===0?"on":""}" data-i="${i}" type="button" aria-label="第${i+1}张"></button>`).join("");
+  const imgs = r.images.map((src,i)=>`<img src="${src}" alt="${r.name} 环境图" loading="lazy" style="${i===0?"":"display:none;"}">`).join("");
+  return `${imgs}
+    <div class="dots">${dots}</div>`;
+}
+
+function cardHTML(r){
+  const d = locResult(r);
+  const distHTML = d!=null ? `<span class="dist ${state.sort==="nearest"?"pick":""}">${fmtDist(d)}</span>` : "";
+  return `
+  <article class="card" data-id="${r.id}">
+    <div class="ph">
+      ${imgRow(r)}
+      <div class="badges">${badges(r)}</div>
+      ${cuisineBadge(r)}
+    </div>
+    <div class="body">
+      <div class="cuisine-tag">${r.cuisines}</div>
+      <div class="title-row">
+        <div>
+          <h3>${r.name}</h3>
+          <div class="en">${r.en}</div>
+        </div>
+        <div style="display:flex; flex-direction:column; align-items:flex-end; gap:5px;">
+          ${distHTML}
+          <div class="price">${r.price}</div>
+        </div>
+      </div>
+      ${ratingOf(r)>0?`<div class="rating"><span class="lb">叮当评分</span>${bellsHTML(ratingOf(r),16)}</div>`:""}
+      <div class="intro">${r.intro}</div>
+      ${r.tips?`<div class="tip">💡 ${r.tips}</div>`:""}
+      <div class="info">
+        <div class="it">${icon("clock")}<span>${r.hours}</span></div>
+        <div class="it">${icon("subway")}<span>${r.mtr}</span></div>
+        <div class="it">${icon("pin")}<span class="addr">${r.address}</span></div>
+      </div>
+      <div class="dishes">${r.dishes.slice(0,4).map(d=>`<span class="dish">${d}</span>`).join("")}</div>
+      <div class="acts">
+        <a class="act" href="${phoneHref(r.phone)}">${icon("phone",14)} 电话</a>
+        <a class="act" href="${gmaps(r)}" target="_blank" rel="noopener">${icon("nav",14)} Google 导航</a>
+        <a class="act" href="${amaps(r)}" target="_blank" rel="noopener">${icon("nav",14)} Apple 导航</a>
+        <button class="act primary detail" type="button">详情</button>
+      </div>
+    </div>
+  </article>`;
+}
+
+function render(){
+  const q = state.q.trim().toLowerCase();
+  let list = DATA.restaurants.filter(r=>{
+    if(!inCat(r)) return false;
+    if(!inCui(r)) return false;
+    if(q){
+      const hay = (r.name + r.en + r.cuisines + r.address + r.dishes.join("") + r.tags.join("") + r.intro + (r.tips||"")).toLowerCase();
+      if(!hay.includes(q)) return false;
+    }
+    return true;
+  });
+  if(state.sort === "asc") list = list.slice().sort((a,b)=>priceLow(a)-priceLow(b));
+  if(state.sort === "desc") list = list.slice().sort((a,b)=>priceLow(b)-priceLow(a));
+  if(state.sort === "nearest"){
+    list = list.slice().sort((a,b)=>((locResult(a)??Infinity)-(locResult(b)??Infinity)));
+  }
+  $("#grid").innerHTML = list.map(cardHTML).join("");
+  $("#empty").style.display = list.length ? "none" : "block";
+  let extra = "";
+  if(state.sort === "nearest" && !state.loc) extra = "（请先输入当前位置或点“使用我的位置”）";
+  if(state.loc) extra = `，起点：${state.locLabel || "当前位置"}`;
+  const cuiTxt = state.cui === "全部" ? "" : `，菜系「${state.cui}」`;
+  $("#resultCount").innerHTML = `找到 <b>${list.length}</b> 家${state.cat==="全部"?"":`「${state.cat}」`}餐厅${cuiTxt}${extra}`;
+}
+
+function renderTabs(){
+  const cats = ["全部","便餐","聚餐","商务宴请"];
+  $("#tabs").innerHTML = cats.map(c=>{
+    const n = c==="全部" ? DATA.restaurants.filter(inCui).length : DATA.restaurants.filter(r=>r.cats.includes(c) && inCui(r)).length;
+    return `<button class="tab ${state.cat===c?"active":""}" data-cat="${c}" role="tab" aria-selected="${state.cat===c}">${c} <span class="n">${n}</span></button>`;
+  }).join("");
+  const lbl = state.cat === "全部" ? "让叮当帮你选" : `让叮当帮你选（${state.cat}）`;
+  const el = $(".rndlabel");
+  if(el) el.textContent = lbl;
+}
+
+function renderCuiTabs(){
+  $("#cuiTabs").innerHTML = CUIS.map(c=>{
+    const n = c==="全部" ? DATA.restaurants.filter(inCat).length
+      : DATA.restaurants.filter(r=>inCat(r) && (r.cui||[]).includes(c)).length;
+    return `<button class="chip ${state.cui===c?"on":""}" data-cui="${c}" type="button" role="tab" aria-selected="${state.cui===c}">${c} <span class="n">${n}</span></button>`;
+  }).join("");
+}
+
+function openModal(id){
+  const r = DATA.restaurants.find(x=>x.id===id);
+  if(!r) return;
+  const d = locResult(r);
+  const ph = $("#mph");
+  ph.querySelectorAll(".mph-img").forEach(e=>e.remove());
+  r.images.forEach((src,i)=>{
+    const im = document.createElement("img");
+    im.className = "mph-img" + (i===0?" on":"");
+    im.src = src; im.alt = r.name + " 环境图";
+    ph.insertBefore(im, ph.firstChild);
+  });
+  $("#mbody").innerHTML = `
+    <div class="mtop">
+      <div>
+        <h2 id="modalTitle">${r.name}</h2>
+        <div class="men">${r.en} · ${r.cuisines}</div>
+        ${ratingOf(r)>0?`<div class="rating" style="margin-top:6px;"><span class="lb">叮当评分</span>${bellsHTML(ratingOf(r),18)}</div>`:""}
+      </div>
+      <div style="display:flex; flex-direction:column; align-items:flex-end; gap:5px;">
+        ${d!=null?`<span class="dist pick">距起点 ${fmtDist(d)}</span>`:""}
+        <div class="price">人均 ${r.price}</div>
+      </div>
+    </div>
+    <div class="mtags">${r.tags.map(t=>`<span class="mtag">${t}</span>`).join("")}</div>
+    <div class="mcols">
+      <div class="mfield">${icon("tag",17)}<div><span class="lb">类目</span>${r.cuisines}</div></div>
+      <div class="mfield">${icon("clock",17)}<div><span class="lb">营业时间</span>${r.hours}</div></div>
+      <div class="mfield">${icon("subway",17)}<div><span class="lb">交通</span>${r.mtr}</div></div>
+      <div class="mfield">${icon("pin",17)}<div><span class="lb">地址</span>${r.address}</div></div>
+      <div class="mfield">${icon("phone",17)}<div><span class="lb">联系电话</span>${r.phone}（+852）</div></div>
+    </div>
+    <div class="mintro">${r.intro}</div>
+    ${r.tips?`<div class="mtip">💡 <b>就餐建议</b>　${r.tips}</div>`:""}
+    <div class="mcols">
+      <div class="mfield">${icon("star",17)}<div><span class="lb">招牌菜</span><div class="mdishes">${r.dishes.map(d=>`<span class="dish">${d}</span>`).join("")}</div></div></div>
+      <div class="mfield">${icon(r.private_room?"users":"users",17)}<div><span class="lb">宴请设施</span>${r.private_room?"设有独立包厢 / 贵宾房":"大众座位为主（适合便餐/聚餐）"}</div></div>
+    </div>
+    <div class="macts">
+      <a class="mact primary" href="${phoneHref(r.phone)}">${icon("phone",15)} 致电订座 ${r.phone}</a>
+      <a class="mact" href="${gmaps(r)}" target="_blank" rel="noopener">${icon("nav",15)} Google 一键导航</a>
+      <a class="mact" href="${amaps(r)}" target="_blank" rel="noopener">${icon("nav",15)} Apple 一键导航</a>
+    </div>`;
+  $("#mask").classList.add("open");
+  document.body.style.overflow = "hidden";
+}
+
+function closeModal(){
+  $("#mask").classList.remove("open");
+  document.body.style.overflow = "";
+}
+
+$("#tabs").addEventListener("click", e=>{
+  const t = e.target.closest(".tab"); if(!t) return;
+  state.cat = t.dataset.cat; renderTabs(); renderCuiTabs(); render();
+});
+$("#cuiTabs").addEventListener("click", e=>{
+  const t = e.target.closest("[data-cui]"); if(!t) return;
+  state.cui = t.dataset.cui; renderCuiTabs(); renderTabs(); render();
+});
+$("#searchInput").addEventListener("input", e=>{ state.q = e.target.value; render(); });
+$("#sortSel").addEventListener("change", e=>{
+  state.sort = e.target.value;
+  if(state.sort === "nearest" && !state.loc) showToast("请先输入当前位置或点“使用我的位置”");
+  render();
+});
+$("#locGo").addEventListener("click", async ()=>{
+  const q = $("#locInput").value.trim();
+  if(!q){ showToast("请先输入一个位置，例如：中环、铜锣湾、会展站"); return; }
+  $("#locGo").classList.add("working");
+  const p = await geocodeAddr(q);
+  $("#locGo").classList.remove("working");
+  if(!p){ showToast("没找到这个位置，试试更具体一点，例如“铜锣湾 轩尼诗道”"); return; }
+  $("#locInput").value = p.label;
+  setLocation(p.lat, p.lng, p.label);
+});
+$("#locInput").addEventListener("keydown", e=>{ if(e.key === "Enter") $("#locGo").click(); });
+$("#locMe").addEventListener("click", ()=>{
+  if(!navigator.geolocation){ showToast("当前浏览器不支持定位，请手动输入地址"); return; }
+  $("#locMe").classList.add("working");
+  navigator.geolocation.getCurrentPosition(pos=>{
+    $("#locMe").classList.remove("working");
+    setLocation(pos.coords.latitude, pos.coords.longitude, "我的位置");
+  }, err=>{
+    $("#locMe").classList.remove("working");
+    showToast("定位失败，请手动输入当前位置");
+  }, {timeout:10000});
+});
+$("#quickLocs").addEventListener("click", e=>{
+  const b = e.target.closest(".qloc"); if(!b) return;
+  setLocation(+b.dataset.lat, +b.dataset.lng, b.textContent.trim());
+});
+$("#randomBtn").addEventListener("click", ()=>{
+  if(state.cat === "全部"){
+    renderRndOpts();
+    $("#rndmask").classList.add("open");
+  }else{
+    pickRandom(state.cat);
+  }
+});
+$("#rndopts").addEventListener("click", e=>{
+  const b = e.target.closest(".rndopt"); if(!b) return;
+  pickRandom(b.dataset.cat);
+});
+$("#rndmask").addEventListener("click", e=>{ if(e.target === $("#rndmask")) $("#rndmask").classList.remove("open"); });
+
+function renderRndOpts(){
+  const icons = {便餐:"🍜", 聚餐:"🥘", 商务宴请:"🤝"};
+  const metas = {
+    便餐:"日常简餐 · 人均较低 · 快进快出",
+    聚餐:"热门馆子 · 人均中等 · 热闹尽兴",
+    商务宴请:"有包厢 · 体面稳当 · 人均较高"
+  };
+  $("#rndopts").innerHTML = CATS.map(c=>{
+    const n = DATA.restaurants.filter(r=>r.cats.includes(c) && inCui(r)).length;
+    return `<button class="rndopt" data-cat="${c}" type="button">
+      <span class="ic">${icons[c]}</span>
+      <span>${c}<div class="meta">${metas[c]}</div></span>
+      <span class="n">${n} 家</span>
+    </button>`;
+  }).join("");
+}
+
+function pickRandom(cat){
+  $("#rndmask").classList.remove("open");
+  const list = DATA.restaurants.filter(r=>r.cats.includes(cat) && inCui(r));
+  if(!list.length){ showToast("该类目暂时没有可选餐厅"); return; }
+  state.cat = cat; renderTabs(); renderCuiTabs(); render();
+  const r = list[Math.floor(Math.random()*list.length)];
+  openModal(r.id);
+  const cuiTxt = state.cui === "全部" ? "" : `·${state.cui} `;
+  showToast(`🎲 叮当帮你选（${cat}${cuiTxt}）：${r.name}`);
+}
+
+$("#rateBtn").addEventListener("click", ()=>{
+  updateRateHint();
+  const inp = $("#pantryId");
+  if(inp) inp.value = savedPantryId || PANTRY_ID;
+  renderRateList();
+  $("#ratemask").classList.add("open");
+});
+$("#rateClose").addEventListener("click", ()=>$("#ratemask").classList.remove("open"));
+$("#ratemask").addEventListener("click", e=>{ if(e.target === $("#ratemask")) $("#ratemask").classList.remove("open"); });
+$("#pantrySave").addEventListener("click", ()=>{
+  const v = ($("#pantryId").value || "").trim();
+  savedPantryId = v;
+  try{ writeKey(PANTRY_KEY, v); }catch(e){}
+  cloudOn = !!pantryId();
+  updateRateHint();
+  showToast(v ? "已开启云端同步" : "已关闭云端同步");
+  if(cloudOn) cloudSave(localRatings);
+});
+$("#rateList").addEventListener("click", e=>{
+  const b = e.target.closest("[data-rate]");
+  if(!b) return;
+  const id = b.dataset.id;
+  if(b.dataset.clear === "1"){
+    delete localRatings[id];
+  }else{
+    localRatings[id] = +b.dataset.rate;
+  }
+  saveRatings();
+  renderRateList();
+  render();
+});
+
+function renderRateList(){
+  updateRateHint();
+  const cur = state.cat === "全部" ? null : state.cat;
+  const list = DATA.restaurants.filter(r=>!cur || r.cats.includes(cur));
+  const rows = list.map(r=>{
+    const n = ratingOf(r);
+    const btns = [1,2,3,4,5].map(i=>{
+      const on = i <= n;
+      return `<button type="button" data-id="${r.id}" data-rate="${i}" title="${i} 铛" aria-label="${r.name} ${i}铛">
+        <img src="images/${on?"bell":"bell-off"}.png" alt="">
+      </button>`;
+    }).join("");
+    return `<div class="rate-row">
+      <span class="rn">${r.name}<span class="rcat">${r.cats.join(" / ")}</span></span>
+      <span class="rate-bells">${btns}</span>
+      ${n?`<button class="rate-clear" type="button" data-id="${r.id}" data-clear="1" data-rate="0">清除</button>`:""}
+    </div>`;
+  }).join("");
+  $("#rateList").innerHTML = rows;
+}
+
+$("#grid").addEventListener("click", e=>{
+  const b = e.target.closest(".detail");
+  if(b){ openModal(b.closest(".card").dataset.id); return; }
+  const d = e.target.closest(".dot");
+  if(d){
+    const ph = d.closest(".ph");
+    const imgs = $$("img", ph);
+    const i = +d.dataset.i;
+    imgs.forEach((im,idx)=>{ im.style.display = idx===i?"block":"none"; });
+    $$(".dot",ph).forEach((x,idx)=>x.classList.toggle("on",idx===i));
+  }
+});
+$("#closeBtn").addEventListener("click", closeModal);
+$("#prevBtn").addEventListener("click", e=>{ e.stopPropagation(); stepModal(-1); });
+$("#nextBtn").addEventListener("click", e=>{ e.stopPropagation(); stepModal(1); });
+$("#mask").addEventListener("click", e=>{ if(e.target === $("#mask")) closeModal(); });
+document.addEventListener("keydown", e=>{
+  if(e.key === "Escape"){ $("#rndmask").classList.remove("open"); $("#ratemask").classList.remove("open"); }
+  if(!$("#mask").classList.contains("open")) return;
+  if(e.key === "Escape") closeModal();
+  if(e.key === "ArrowLeft") stepModal(-1);
+  if(e.key === "ArrowRight") stepModal(1);
+});
+
+function stepModal(dir){
+  const imgs = $$(".mph-img", $("#mph"));
+  if(imgs.length < 2) return;
+  let cur = imgs.findIndex(i=>i.classList.contains("on"));
+  cur = (cur + dir + imgs.length) % imgs.length;
+  imgs.forEach((i,idx)=>i.classList.toggle("on", idx===cur));
+}
+
+$("#totalCount").textContent = DATA.restaurants.length;
+// 公司场景：打开页面即以新鸿基中心为默认起点，直接显示每家店的距离
+state.loc = {lat: 22.28044, lng: 114.17693};
+state.locLabel = "新鸿基中心（公司）";
+$$(".qloc").forEach(b=>b.classList.toggle("on", b.textContent.includes("新鸿基中心")));
+renderTabs();
+renderCuiTabs();
+render();
+// 异步拉取云端评分，回来后合并并刷新界面
+(async function(){
+  const c = await cloudLoad();
+  if(c && typeof c === "object"){
+    let changed = false;
+    for(const k in c){
+      if(localRatings[k] == null){ localRatings[k] = c[k]; changed = true; }
+    }
+    if(changed){
+      try{ storageMode = writeKey(RATE_KEY, JSON.stringify(localRatings)); }catch(e){}
+      renderTabs(); renderCuiTabs(); render();
+      if($("#ratemask").classList.contains("open")) renderRateList();
+    }
+  }
+  updateRateHint();
+  if(cloudOn && Object.keys(localRatings).length) queueCloudSave();
+})();
+</script>
+</body>
+</html>
